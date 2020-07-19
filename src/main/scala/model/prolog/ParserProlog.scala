@@ -7,7 +7,7 @@ import model.game.Player.Player
 import model.game.BoardGame.Board.BoardImpl
 import model.game.BoardGame.{Board, BoardCell}
 import model.game.{Coordinate, Move, Piece, Player}
-import view.factories.ResourceLoader
+import view.utils.ResourceLoader
 
 /**
  * A prolog viking chess parser

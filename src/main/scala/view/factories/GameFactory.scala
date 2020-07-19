@@ -3,8 +3,7 @@ package view.factories
 import java.awt._
 import java.awt.event.{MouseAdapter, MouseEvent}
 
-import view.utils.ScreenSize
-
+import view.utils.{ResourceLoader, ScreenSize}
 import javax.swing._
 import javax.swing.border.LineBorder
 

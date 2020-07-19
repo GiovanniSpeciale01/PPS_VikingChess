@@ -5,7 +5,7 @@ import java.awt.event.{MouseAdapter, MouseEvent}
 import java.awt.image.BufferedImage
 
 import javax.swing._
-import view.utils.ScreenSize
+import view.utils.{ResourceLoader, ScreenSize}
 
 trait MenuFactory {
 

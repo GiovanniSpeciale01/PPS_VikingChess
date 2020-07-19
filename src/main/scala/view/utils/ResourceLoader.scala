@@ -1,7 +1,7 @@
-package view.factories
+package view.utils
 
-import java.awt.image.BufferedImage
 import java.awt.Font
+import java.awt.image.BufferedImage
 import java.io.InputStream
 
 import javax.imageio.ImageIO
