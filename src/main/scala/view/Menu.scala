@@ -80,6 +80,8 @@ object Menu {
       menuPanel = viewFactory.createMenuPanel("Choose Mode: ")
       pveButton = viewFactory.createMenuButton(" Player Vs Computer")
       pveButton.addActionListener(_ => pveVariant())
+      // not enabled for release 0.3
+      pveButton.setEnabled(false)
       pvpButton = viewFactory.createMenuButton("Player Vs Player")
       pvpButton.addActionListener(_ => pvpVariant())
       exitButtonMenu = viewFactory.createMenuButton("Exit")

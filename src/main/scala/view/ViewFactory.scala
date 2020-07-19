@@ -219,7 +219,7 @@ object ViewFactory {
     private val colorProvider = new ColorProviderImpl
     private var cellDimension = 0
     var smallerSide: Int = ScreenSize.getSmallerSide * 9 / 10
-    val f: Font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/NorseBold-2Kge.otf"))
+    val f: Font = ResourceLoader.loadFont("/font/NorseBold-2Kge.otf")
     val ge: GraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment
     ge.registerFont(f)
 
@@ -313,7 +313,7 @@ object ViewFactory {
 
     private class CenterCell(dimension: Int) extends SpecialCell(dimension){
 
-      private var iconCell = new ImageIcon("src/main/resources/images/iconThrone.png")
+      private var iconCell = new ImageIcon(ResourceLoader.loadImage("/images/iconThrone.png"))
       private var image = iconCell.getImage
 
       image = image.getScaledInstance(cellDimension * 70/100, cellDimension * 70/100, Image.SCALE_SMOOTH)
@@ -326,7 +326,7 @@ object ViewFactory {
 
     private class CornerCell(dimension: Int) extends SpecialCell(dimension){
 
-      private var iconCell = new ImageIcon("src/main/resources/images/iconCellWin.png")
+      private var iconCell = new ImageIcon(ResourceLoader.loadImage("/images/iconCellWin.png"))
       private var image = iconCell.getImage
 
       image = image.getScaledInstance(cellDimension * 70/100, cellDimension * 70/100, Image.SCALE_SMOOTH)
@@ -359,11 +359,11 @@ object ViewFactory {
 
       private val chooseLabel = new JLabel()
 
-      private val image = ImageIO.read(new File("src/main/resources/images/Cornice.png"))
+      private val image = ResourceLoader.loadImage("/images/Cornice.png")
 
       private val imageScaled = image.getScaledInstance(smallerSide, smallerSide * 98/100, Image.SCALE_DEFAULT)
 
-      private val img = new ImageIcon("src/main/resources/images/logo.png")
+      private val img = new ImageIcon(ResourceLoader.loadImage("/images/logo.png"))
 
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       menuLabel.setPreferredSize(new Dimension(smallerSide, smallerSide * 25/ 100))
@@ -454,7 +454,7 @@ object ViewFactory {
     }
 
     private class GameButton(s: String) extends EmptyButton(s) {
-      private var imageIcon = new ImageIcon("src/main/resources/images/hamburgerMenu.png")
+      private var imageIcon = new ImageIcon(ResourceLoader.loadImage("/images/hamburgerMenu.png"))
       private var image = imageIcon.getImage
       image = image.getScaledInstance(smallerSide * 7/ 100, smallerSide * 7/100, Image.SCALE_SMOOTH)
       imageIcon = new ImageIcon(image)
@@ -556,7 +556,7 @@ object ViewFactory {
 
     private class Frame extends JFrame {
       private val FRAME_TITLE = "Viking Chess - Hnefatafl"
-      private val iconApp = new ImageIcon("src/main/resources/images/iconApp.png")
+      private val iconApp = new ImageIcon(ResourceLoader.loadImage("/images/iconApp.png"))
 
       setTitle(FRAME_TITLE)
       setIconImage(iconApp.getImage)
