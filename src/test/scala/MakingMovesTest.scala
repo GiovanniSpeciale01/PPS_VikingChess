@@ -1,7 +1,5 @@
-import java.io.FileInputStream
-
 import alice.tuprolog.{Prolog, SolveInfo, Theory}
-import model.prolog.{GameRules, ParserProlog}
+import model.prolog.GameRules
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

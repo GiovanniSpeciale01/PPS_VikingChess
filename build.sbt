@@ -16,10 +16,10 @@ lazy val root = (project in file("."))
       "org.scalacheck" %% "scalacheck" % "1.14.0" % Test,
       "it.unibo.alice.tuprolog" % "tuprolog" % "3.1" ,
       "com.typesafe.akka" %% "akka-actor" % "2.6.6",
-      "org.scala-lang.modules" %% "scala-async" % "0.10.0",
-      "commons-io" % "commons-io" % "2.6"
+      "org.scala-lang.modules" %% "scala-async" % "0.10.0"
     ),
     mainClass := Some("HnefataflApp"),
+    assemblyJarName in assembly := "Hnefatafl - Viking Chess.jar",
     crossPaths := false,
     Test / parallelExecution := false,
     test in assembly := {}

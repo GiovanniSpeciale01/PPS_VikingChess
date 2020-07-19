@@ -13,6 +13,9 @@ import model.prolog.{ParserProlog, PrologSnapshot}
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
+/**
+ * For evaluating IA performances
+ */
 object PerformanceApp extends App {
 
   val newcomer: Level = Level.Newcomer
@@ -34,8 +37,7 @@ object PerformanceApp extends App {
 
    /**
    * IA performance sequential test
-   *
-   * */
+   */
     println("Sequential")
     for (variant <- variantList;
          level <- levelList) {
@@ -53,8 +55,7 @@ object PerformanceApp extends App {
 
     /**
      * IA performance parallel test
-     *
-     * */
+     */
     println("")
     println("Parallel")
     for (variant <- variantList;
@@ -68,6 +69,5 @@ object PerformanceApp extends App {
       refIA ! PerformFindBestMoveMsg(snapshot, variant,level)
       Await.ready(system.whenTerminated, Duration(1, TimeUnit.MINUTES))
     }
-
 
 }

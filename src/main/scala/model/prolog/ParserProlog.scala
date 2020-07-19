@@ -1,13 +1,10 @@
 package model.prolog
 
-import java.io.{BufferedReader, FileInputStream}
-
 import alice.tuprolog.{Prolog, SolveInfo, Struct, Term, Theory}
 import model.game.Player.Player
 import model.game.BoardGame.Board.BoardImpl
 import model.game.BoardGame.{Board, BoardCell}
 import model.game.{Coordinate, Move, Piece, Player}
-import view.factories.ResourceLoader
 
 /**
  * A prolog viking chess parser
