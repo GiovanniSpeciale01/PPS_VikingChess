@@ -19,20 +19,22 @@ object GameMode extends Enumeration {
   * Defines Enumeration for the player type.
   */
 object Player extends Enumeration {
-  val White: Player.Value = Value("White")
-  val Black: Player.Value = Value("Black")
-  val None: Player.Value = Value("None")
-  val Draw: Player.Value = Value("Draw")
+  case class Val(playerString: String) extends super.Val
+  val White: Val = Val("w")
+  val Black: Val = Val("b")
+  val None: Val = Val("n")
+  val Draw: Val = Val("d")
 }
 
 /**
-  * Defines Enumeration for the IA.
+  * Defines Enumeration for the IA difficulty.
   */
 object Level extends Enumeration {
-  val Newcomer: Level.Value = Value("Newcomer")
-  val Amateur: Level.Value = Value("Amateur")
-  val Standard: Level.Value = Value("Standard")
-  val Advanced: Level.Value = Value("Advanced")
+  case class Val(difficulty: String, depth: Int) extends super.Val
+  val Newcomer: Val = Val("Newcomer", 1)
+  val Amateur: Val = Val("Amateur", 2)
+  val Standard: Val = Val("Standard", 3)
+  val Advanced: Val = Val("Advanced", 4)
 }
 
 /**
@@ -40,16 +42,35 @@ object Level extends Enumeration {
   */
 object GameVariant extends Enumeration {
   case class Val(nameVariant: String, size: Int) extends super.Val
-  val Hnefatafl = Val("Hnefatafl", 11)
-  val Tawlbwrdd = Val("Tawlbwrdd", 11)
-  val Tablut = Val("Tablut", 9)
-  val Brandubh = Val("Brandubh", 7)
+  val Hnefatafl: Val = Val("Hnefatafl", 11)
+  val Tawlbwrdd: Val = Val("Tawlbwrdd", 11)
+  val Tablut: Val = Val("Tablut", 9)
+  val Brandubh: Val = Val("Brandubh", 7)
 }
 
 /**
   * Defines Enumeration for the piece in each cell.
   */
 object Piece extends Enumeration {
-  type PieceType = Value
-  val WhitePawn, BlackPawn, WhiteKing, Void = Value
+  case class Val(pieceString: String) extends super.Val
+  val WhitePawn: Val = Val("w")
+  val BlackPawn: Val = Val("b")
+  val WhiteKing : Val= Val("k")
+  val Empty: Val = Val("e")
+}
+
+/**
+  * Defines Enumeration for previous, next, first or last snapshot.
+  */
+object Snapshot extends Enumeration {
+  type SnapshotType = Value
+  val Previous, Next, First, Last = Value
+}
+
+/**
+ * Defines Enumeration for Maximize or Minimize.
+ */
+object MaxMin extends Enumeration {
+  type MaxMin = Value
+  val Max, min = Value
 }

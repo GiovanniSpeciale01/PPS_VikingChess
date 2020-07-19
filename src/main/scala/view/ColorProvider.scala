@@ -2,62 +2,41 @@ package view
 
 import java.awt.Color
 
-trait ColorProvider {
-
-  def getBlackColor: Color
-
-  def getHighlightColor: Color
-
-  def getSpecialCellColor: Color
-
-  def getPawnCellColor: Color
-
-  def getNormalCellColor: Color
-
-  def getPossibleMovesColor: Color
-
-  def getLightBrownColor: Color
-
-  def getBrownColor: Color
-
-  def getWhiteColor: Color
-
-  def getGoldColor: Color
-
-  def getBlackWinColor: Color
-
-  def getWhiteWinColor: Color
-
-}
 
 object ColorProvider {
 
-  def apply: ColorProvider = ColorProviderImpl()
+    def getBlackColor: Color = Color.BLACK
 
-  case class ColorProviderImpl() extends ColorProvider {
+    def getHighlightColor: Color = Color.LIGHT_GRAY
 
-    override def getBlackColor: Color = Color.BLACK
+    def getSpecialCellColor: Color = new Color(46, 50, 100)
 
-    override def getHighlightColor: Color = Color.LIGHT_GRAY
+    def getPawnCellColor: Color = new Color(153, 203, 205)
 
-    override def getSpecialCellColor: Color = new Color(46, 50, 100)
+    def getNormalCellColor: Color = new Color(83, 143, 159)
 
-    override def getPawnCellColor: Color = new Color(153, 203, 205)
+    def getPossibleMovesColor: Color =  new Color(52, 89, 99)
 
-    override def getNormalCellColor: Color = new Color(83, 143, 159)
+    def getSpecialCellPossibleMovesColor: Color = new Color(34, 57, 64)
 
-    override def getPossibleMovesColor: Color = new Color(41, 71, 79)
+    def getLightBrownColor: Color = new Color(200, 170, 109)
 
-    override def getLightBrownColor: Color = new Color(200, 170, 109)
+    def getBrownColor: Color = new Color(114, 73, 51)
 
-    override def getBrownColor: Color = new Color(114, 73, 51)
+    def getWhiteColor: Color = new Color(255, 250, 240)
 
-    override def getWhiteColor: Color = new Color(255, 250, 240)
+    def getGoldColor: Color = new Color(212, 175, 55)
 
-    override def getGoldColor: Color = new Color(212, 175, 55)
+    def getBlackWinColor: Color = Color.decode("#953e3e")
 
-    override def getBlackWinColor: Color = new Color(203, 50, 52)
+    def getWhiteWinColor: Color = Color.decode("#5a7a34")
 
-    override def getWhiteWinColor: Color = new Color(119, 221, 119)
-  }
+    def getLastMoveColor: Color = Color.decode("#cdd26a")
+
+    def getSpecialCellLastMoveColor: Color = Color.decode("#597502")
+
+    def getSelectedCellColor: Color = Color.decode("#829769")
+
+    def getSpecialCellSelectedCellColor: Color = Color.decode("#646f40")
+
 }

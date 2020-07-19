@@ -14,8 +14,8 @@ object ScreenSize {
 
     /** The screen size is equal to the smaller size of the monitor. */
     screen match {
-        case height if screen.getHeight < screen.getWidth => smallerSide = screen.getHeight.toInt
-        case width if screen.getHeight > screen.getWidth => smallerSide = screen.getWidth.toInt
+        case _ if screen.getHeight < screen.getWidth => smallerSide = screen.getHeight.toInt
+        case _ if screen.getHeight > screen.getWidth => smallerSide = screen.getWidth.toInt
     }
 
     /**
