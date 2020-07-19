@@ -1,12 +1,8 @@
 package utils
 
-import java.util.List
+import model.Piece.PieceType
 
-import model.PieceEnum.PieceType
-
-import scala.collection.JavaConverters._
-
-object Board {
+object BoardGame {
 
   trait BoardCell {
     /**
@@ -53,7 +49,7 @@ object Board {
     /**
       * Defines board's cells list.
       */
-    def cells: List[BoardCell]
+    def cells: Seq[BoardCell]
 
     /**
       * Defines size of board's side.
@@ -67,15 +63,18 @@ object Board {
   }
 
   object Board {
+
     def apply(cells: Seq[BoardCell]): Board = BoardImpl(cells)
 
     case class BoardImpl(allCells: Seq[BoardCell]) extends Board {
 
-      override def cells: List[BoardCell] = allCells.asJava
+      override def cells: Seq[BoardCell] = allCells
 
-      override def size: Int = allCells.length
+      override def size: Int = Math.sqrt(allCells.length).toInt
 
       override def getCell(coordinate: Pair[Int]): BoardCell = allCells.filter(_.getCoordinate == coordinate).head
+
+      override def equals(obj: Any): Boolean = this.cells.equals(obj.asInstanceOf[Board].cells)
     }
   }
 }

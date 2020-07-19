@@ -10,9 +10,9 @@ object TheoryGame extends Enumeration {
 /**
   * Defines Enumeration for the game mode.
   */
-object ModeGame extends Enumeration {
-  val PVP: ModeGame.Value = Value("PVP")
-  val PVE: ModeGame.Value = Value("PVE")
+object GameMode extends Enumeration {
+  val PVP: GameMode.Value = Value("PVP")
+  val PVE: GameMode.Value = Value("PVE")
 }
 
 /**
@@ -49,7 +49,7 @@ object GameVariant extends Enumeration {
 /**
   * Defines Enumeration for the piece in each cell.
   */
-object PieceEnum extends Enumeration {
+object Piece extends Enumeration {
   type PieceType = Value
   val WhitePawn, BlackPawn, WhiteKing, Void = Value
 }

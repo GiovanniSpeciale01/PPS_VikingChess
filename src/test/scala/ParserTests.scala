@@ -1,5 +1,4 @@
-import model.ParserProlog.ParserPrologImpl
-import model.{GameVariant, ParserProlog, Player, TheoryGame}
+import model.{GameRules, GameVariant, ParserProlog, ParserPrologImpl, Player, TheoryGame}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FunSuite, Matchers}
 import utils.Pair.PairImpl
@@ -13,7 +12,7 @@ import scala.collection.mutable.ListBuffer
 
 class ParserTests extends FunSuite with MockFactory with Matchers {
 
-  val parser: ParserProlog = ParserPrologImpl(TheoryGame.GameRules.toString)
+  val parser: ParserProlog = ParserPrologImpl(GameRules.theory())
 
   test("Tests of a correct horizontal capture of white pawn.") {
     inSequence {
@@ -153,5 +152,47 @@ class ParserTests extends FunSuite with MockFactory with Matchers {
     }
     val currentGame: (_, Player.Value, _, _) = parser.makeMove(PairImpl(5,6), PairImpl(4,6))
     currentGame._2 shouldBe Player.Draw
+
+
   }
+
+  test("Tests 1 deep clone."){
+    var copyParser: ParserProlog = null
+
+    parser.createGame(GameVariant.Brandubh.toString().toLowerCase())
+    parser.makeMove(PairImpl(1,4), PairImpl(1,5))
+    parser.makeMove(PairImpl(4,5), PairImpl(7,5))
+    parser.makeMove(PairImpl(6,4), PairImpl(6,5))
+    copyParser = parser.copy()
+    parser.makeMove(PairImpl(4,4), PairImpl(4,5))
+    parser.makeMove(PairImpl(1,5), PairImpl(3,5))
+    parser.makeMove(PairImpl(4,3), PairImpl(1,3))
+
+
+    assert(!parser.equals(copyParser))
+  }
+
+  test("Tests 2 deep clone."){
+    var copyParser: ParserProlog = null
+
+    parser.createGame(GameVariant.Brandubh.toString().toLowerCase())
+    parser.makeMove(PairImpl(1,4), PairImpl(1,5))
+    parser.makeMove(PairImpl(4,5), PairImpl(7,5))
+    parser.makeMove(PairImpl(6,4), PairImpl(6,5))
+    copyParser = parser.copy()
+
+    assert(parser.equals(copyParser))
+  }
+
+  test("Tests 3 deep clone.") {
+    var copyParser: ParserProlog = null
+    inSequence {
+      parser.createGame(GameVariant.Brandubh.toString().toLowerCase())
+      copyParser=parser.copy
+      parser.makeMove(PairImpl(1,4), PairImpl(1,3))
+    }
+    assert(parser.showPossibleCells(PairImpl(1,4)).size==0)
+    assert(copyParser.showPossibleCells(PairImpl(1,4)).size!=0)
+  }
+
 }

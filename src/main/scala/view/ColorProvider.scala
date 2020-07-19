@@ -4,7 +4,6 @@ import java.awt.Color
 
 trait ColorProvider {
 
-
   def getBlackColor: Color
 
   def getHighlightColor: Color
@@ -25,11 +24,17 @@ trait ColorProvider {
 
   def getGoldColor: Color
 
+  def getBlackWinColor: Color
+
+  def getWhiteWinColor: Color
+
 }
 
-object ColorProvider{
+object ColorProvider {
 
-  class ColorProviderImpl() extends ColorProvider{
+  def apply: ColorProvider = ColorProviderImpl()
+
+  case class ColorProviderImpl() extends ColorProvider {
 
     override def getBlackColor: Color = Color.BLACK
 
@@ -50,5 +55,9 @@ object ColorProvider{
     override def getWhiteColor: Color = new Color(255, 250, 240)
 
     override def getGoldColor: Color = new Color(212, 175, 55)
+
+    override def getBlackWinColor: Color = new Color(203, 50, 52)
+
+    override def getWhiteWinColor: Color = new Color(119, 221, 119)
   }
 }

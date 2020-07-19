@@ -168,7 +168,7 @@ cornerCellCoord(S, coord(S, S)).
 centralCellCoord(S, coord(X, X)) :- X is (S // 2) + 1.
 
 %%% Returns all corner cells of spiecified +BoardSize.
-% [centerCell(+BoardSize, -ListCornerCells)]
+% [allCornerCells(+BoardSize, -ListCornerCells)]
 allCornerCells(S, L) :- findall(C, cornerCellCoord(S, C), L).
 
 %%% Returns corner cells and center cell in a board of the specified +BoardSize.
@@ -351,12 +351,12 @@ findAnyMoveRow(G, [_|T]) :- findAnyMoveRow(G, T).
 %%% (NB: only for PlayerToMove pieces, see Game example above).
 %%% ListOfPossibleMoves ex.: [(ToCoord), ...]
 % [getCoordPossibleMoves(+Game, +FromCoord, -ListOfPossibleMoves)]
-getCoordPossibleMoves((V, P, W, B), FromCoord, O) :-
+getCoordPossibleMoves((V, P, n, B), FromCoord, O) :-
 		getCell(B, FromCoord, C),
 		cellOwner(C, P),
 		possibleMoves((V, P, W, B), C, M),
 		only_ToMove(M, O), !.
-% Other cases: non player to move piece or empty
+% Other cases: non player to move piece, empty or game has ended
 getCoordPossibleMoves((_, _, _, _), _, []).
 
 %%% Maps a list of moves expressed like (FromCoordinate, ToCoordinate) as (ToCoordinate).

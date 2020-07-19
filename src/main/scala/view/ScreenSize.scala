@@ -11,10 +11,6 @@ object ScreenSize {
     private var smallerSide = 0
 
     val screen: Dimension = Toolkit.getDefaultToolkit.getScreenSize
-    /*
-    smallerSide = (if (screen.getHeight < screen.getWidth) screen.getHeight
-    else screen.getWidth).toInt
-    */
 
     /** The screen size is equal to the smaller size of the monitor. */
     screen match {

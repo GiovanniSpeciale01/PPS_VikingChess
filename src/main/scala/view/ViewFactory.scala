@@ -17,12 +17,18 @@ import view.ColorProvider.ColorProviderImpl
 
 trait ViewFactory {
 
+  /**
+    * Gets the smaller side of the monitor.
+    *
+    * @return int size
+    */
   def getSmallerSide: Int
 
   /**
    * Creates a new Center Cell.
    *
    * @param dimension
+   *                cell's dimension in percent.
    *
    * @return a new Center Cell.
    */
@@ -32,13 +38,18 @@ trait ViewFactory {
   /**
    * Creates a new Corner Cell.
    *
+   * @param dimension
+   *           dimension of the cell.
+   *
    * @return a new Corner Cell.
    */
   def createCornerCell(dimension: Int): JButton
 
-
   /**
    * Creates a new Pawn Cell.
+   *
+   * @param dimension
+   *            dimension of the cell.
    *
    * @return a new Pawn Cell.
    */
@@ -47,124 +58,168 @@ trait ViewFactory {
   /**
    * Creates a new Normal Cell.
    *
+   * @param dimension
+   *             dimension of the cell.
+   *
    * @return a new Normal Cell.
    */
   def createNormalCell(dimension: Int): JButton
 
   /**
-   * Creates a new GamePanel.
+   * Creates a new BoardPanel.
    *
-   * column of GridLayout.
-   * row of GridLayout.
-   * @return a new GamePanel.
+   * @return a new BoardPanel.
    */
-  def createBoardPanel(): JPanel
+  def createBoardPanel: JPanel
 
   /**
    * Creates a new MenuPanel.
+   *
+   * @param string
+   *             text of the menù panel.
    *
    * @return a new MenuPanel.
    */
   def createMenuPanel(string: String): JPanel
 
-
   /**
-   * Creates a panel with flow layout.
+   * Creates top or bottom panel with FlowLayout.
    *
-   * @return a panel with flow layout.
+   * @return top or bottom panel.
    *
    */
   def createTopBottomPanel: JPanel
 
+  /**
+    * Creates right or left panel with GridLayout.
+    *
+    * @param columns
+    *                number of columns.
+    * @param rows
+    *                number of rows.
+    *
+    * @return right or left panel.
+    *
+    */
   def createLeftRightPanel(columns: Int, rows: Int): JPanel
 
   /**
-   * Creates a panel with overlay layout.
+   * Creates a panel with OverlayLayout.
    *
-   * @return a panel with overlay layout.
-   *
+   * @return a panel.
    */
   def createOverlayLayoutPanel: JPanel
 
   /**
-   * Creates a panel with border layout.
+   * Creates a panel with BorderLayout.
    *
-   * @return a panel with border layout.
-   *
+   * @return a panel.
    */
   def createGamePanel: JPanel
 
+  /**
+    * Creates a panel with BoxLayout, containing board, left and right panel.
+    *
+    * @return a panel.
+    */
   def createBoardPlusColumnsPanel: JPanel
 
   /**
-   * Creates a button with black background.
-   * * @param s
-   * name of button.
+   * Creates a menù button.
    *
-   * @return a panel with border layout.
+   * @param string
+   *               name of button.
    *
+   * @return a button.
    */
-  def createMenuButton(s: String): JButton
+  def createMenuButton(string: String): JButton
 
-  def createPopUpButton: JPopupMenu
+  /**
+    * Creates a popup menù.
+    *
+    * @return a popup.
+    */
+  def createPopUpMenu: JPopupMenu
 
+  /**
+    * Creates an item for popup menù.
+    *
+    * @param text
+    *               text of the item.
+    *
+    * @return an item.
+    */
   def createJMenuItem(text: String): JMenuItem
 
   /**
-   * Creates a button.
-   * *@param s
-   * name of button.
+   * Creates a game button.
+   * @param string
+   *                name of button.
    *
-   * @return a panel with border layout.
-   *
+   * @return a button.
    */
-  def createGameButton(s: String): JButton
+  def createGameButton(string: String): JButton
 
   /**
-   * Creates a black pawn.
+   * Creates a pawn black.
    *
    * @return a label.
-   *
    */
   def createBlackPawn: JLabel
 
   /**
-   * Creates a white pawn.
+   * Creates a pawn white.
    *
    * @return a label.
-   *
    */
   def createWhitePawn: JLabel
 
   /**
-   * Creates a king pawn.
+   * Creates a king white.
    *
    * @return a label.
-   *
    */
-  def createKingPawn: JLabel
+  def createWhiteKing: JLabel
 
+  /**
+    * Creates a lost pawn black.
+    *
+    * @return a label.
+    */
+  def createLostBlackPawn : JLabel
 
+  /**
+    * Creates a lost pawn white.
+    *
+    * @return a label.
+    */
   def createLostWhitePawn : JLabel
 
   /**
-   * Creates a Frame.
+    * Creates a label to showing player to move and winner.
+    *
+    * @return a label.
+    */
+  def createLabelPlayerToMoveWinner : JLabel
+
+  /**
+   * Creates a frame.
    *
-   * @return a JFrame.
-   *
+   * @return a frame.
    */
   def createFrame: JFrame
-
 }
 
-object View {
+object ViewFactory {
 
-  case class ViewImpl() extends ViewFactory {
+  def apply: ViewFactory = ViewFactoryImpl()
 
-    private var colorProvider = new ColorProviderImpl
-    private var cellDimension = 0;
-    var smallerSide = ScreenSize.getSmallerSide * 9 / 10
-    val f: Font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/NorseBold-2Kge.otf"))
+  case class ViewFactoryImpl() extends ViewFactory {
+
+    private val colorProvider = new ColorProviderImpl
+    private var cellDimension = 0
+    var smallerSide: Int = ScreenSize.getSmallerSide * 9 / 10
+    val f: Font = ResourceLoader.loadFont("/font/NorseBold-2Kge.otf")
     val ge: GraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment
     ge.registerFont(f)
 
@@ -178,7 +233,7 @@ object View {
 
     override def createNormalCell(dimension: Int): JButton = new NormalCell(dimension)
 
-    override def createBoardPanel(): JPanel = new BoardPanel()
+    override def createBoardPanel: JPanel = new BoardPanel()
 
     override def createMenuPanel(string: String): JPanel = new MenuPanel(string)
 
@@ -194,7 +249,7 @@ object View {
 
     override def createMenuButton(s: String): JButton = new MenuButton(s)
 
-    override def createPopUpButton: JPopupMenu = new JPopupMenu
+    override def createPopUpMenu: JPopupMenu = new JPopupMenu
 
     override def createJMenuItem(text: String): JMenuItem = new MenuItem(text)
 
@@ -204,18 +259,23 @@ object View {
 
     override def createBlackPawn: JLabel = new BlackPawn
 
-    override def createKingPawn: JLabel = new KingPawn
+    override def createWhiteKing: JLabel = new KingPawn
+
+    override def createLostBlackPawn : JLabel = new LostBlackPawn
 
     override def createLostWhitePawn : JLabel = new LostWhitePawn
+
+    override def createLabelPlayerToMoveWinner: JLabel = new LabelPlayer_Winner
 
     override def createFrame: JFrame = new Frame
 
     abstract private class Cell(dimension: Int) extends JButton {
       cellDimension = smallerSide / dimension * 80 / 100
 
-      var colorCell: Color = null
+      var colorCell: Color = _
 
-      var color: Color = null
+      var color: Color = _
+
       setPreferredSize(new Dimension(cellDimension, cellDimension))
       setAlignmentX(Component.CENTER_ALIGNMENT)
       setAlignmentY(Component.CENTER_ALIGNMENT)
@@ -225,15 +285,19 @@ object View {
       setOpaque(true)
       addMouseListener(new MouseAdapter() {
         override def mouseEntered(e: MouseEvent): Unit = {
-          color = getBackground
-          setBackground(Color.LIGHT_GRAY)
+          if( !getBackground.equals(colorProvider.getWhiteWinColor) && !getBackground.equals(colorProvider.getBlackWinColor)){
+            color = getBackground
+            setBackground(Color.LIGHT_GRAY)
+          }
         }
         override def mouseExited(e: MouseEvent): Unit = {
-          if (getComponents().length > 0) {
-            setBackground(colorCell)
-          }
-          else {
-            setBackground(color)
+          if(!getBackground.equals(colorProvider.getWhiteWinColor) && !getBackground.equals(colorProvider.getBlackWinColor)){
+              if (getComponents.length > 0) {
+                setBackground(colorCell)
+              }
+              else {
+                setBackground(color)
+              }
           }
         }
       })
@@ -249,12 +313,12 @@ object View {
 
     private class CenterCell(dimension: Int) extends SpecialCell(dimension){
 
-      private var iconCell = new ImageIcon("src/main/resources/images/iconThrone.png")
+      private var iconCell = new ImageIcon(ResourceLoader.loadImage("/images/iconThrone.png"))
       private var image = iconCell.getImage
 
       image = image.getScaledInstance(cellDimension * 70/100, cellDimension * 70/100, Image.SCALE_SMOOTH)
 
-      iconCell = new ImageIcon(image);
+      iconCell = new ImageIcon(image)
 
       setIcon(iconCell)
 
@@ -262,12 +326,12 @@ object View {
 
     private class CornerCell(dimension: Int) extends SpecialCell(dimension){
 
-      private var iconCell = new ImageIcon("src/main/resources/images/iconCellWin.png")
+      private var iconCell = new ImageIcon(ResourceLoader.loadImage("/images/iconCellWin.png"))
       private var image = iconCell.getImage
 
       image = image.getScaledInstance(cellDimension * 70/100, cellDimension * 70/100, Image.SCALE_SMOOTH)
 
-      iconCell = new ImageIcon(image);
+      iconCell = new ImageIcon(image)
 
       setIcon(iconCell)
 
@@ -285,7 +349,7 @@ object View {
       setBackground(colorNormalCell)
     }
 
-    private class BoardPanel() extends JPanel {
+    private class BoardPanel extends JPanel {
       this.setBackground(colorProvider.getLightBrownColor)
     }
 
@@ -295,11 +359,11 @@ object View {
 
       private val chooseLabel = new JLabel()
 
-      private val image = ImageIO.read(new File("src/main/resources/images/Cornice.png"))
+      private val image = ResourceLoader.loadImage("/images/Cornice.png")
 
       private val imageScaled = image.getScaledInstance(smallerSide, smallerSide * 98/100, Image.SCALE_DEFAULT)
 
-      private val img = new ImageIcon("src/main/resources/images/logo.png")
+      private val img = new ImageIcon(ResourceLoader.loadImage("/images/logo.png"))
 
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       menuLabel.setPreferredSize(new Dimension(smallerSide, smallerSide * 25/ 100))
@@ -364,16 +428,16 @@ object View {
 
     private class MenuButton(s: String) extends EmptyButton(s) {
 
-      private val FONT_DIMENSION = smallerSide * 6 / 100
-      private val BUTTON_DIMENSION = new Dimension(smallerSide * 60/100, smallerSide * 10/100)
+      private val FONT_DIMENSION = smallerSide * 5 / 100
+      private val BUTTON_DIMENSION = new Dimension(smallerSide * 60/100, smallerSide * 8/100)
 
       setPreferredSize(BUTTON_DIMENSION)
       setMaximumSize(getPreferredSize)
       setAlignmentX(Component.CENTER_ALIGNMENT)
 
-      setOpaque(false);
-      setContentAreaFilled(false);
-      setBorderPainted(false);
+      setOpaque(false)
+      setContentAreaFilled(false)
+      setBorderPainted(false)
 
       setFont(new Font(f.getFontName, Font.BOLD, FONT_DIMENSION))
       setForeground(colorProvider.getWhiteColor)
@@ -386,18 +450,18 @@ object View {
         override def mouseExited(e: MouseEvent): Unit = {
           setForeground(colorProvider.getWhiteColor)
         }
-      });
+      })
     }
 
     private class GameButton(s: String) extends EmptyButton(s) {
-      private var imageIcon = new ImageIcon("src/main/resources/images/hamburgerMenu.png")
+      private var imageIcon = new ImageIcon(ResourceLoader.loadImage("/images/hamburgerMenu.png"))
       private var image = imageIcon.getImage
       image = image.getScaledInstance(smallerSide * 7/ 100, smallerSide * 7/100, Image.SCALE_SMOOTH)
       imageIcon = new ImageIcon(image)
       setIcon(imageIcon)
       setBorderPainted(false)
-      setOpaque(false);
-      setContentAreaFilled(false);
+      setOpaque(false)
+      setContentAreaFilled(false)
 
     }
 
@@ -424,12 +488,12 @@ object View {
 
     abstract private class Pawn extends JLabel {
 
-      protected var externalColor: Color = null
-      protected var internalColor: Color = null
-      protected var namePawn: String = null
+      protected var externalColor: Color = _
+      protected var internalColor: Color = _
+      protected var namePawn: String = _
 
-      protected var EXTERNAL_ROUNDRECT_DIMENSION = cellDimension * 8 / 10
-      protected var INTERNAL_ROUNDRECT_DIMENSION = cellDimension * 7 / 10
+      protected var EXTERNAL_ROUNDRECT_DIMENSION: Int= cellDimension * 8 / 10
+      protected var INTERNAL_ROUNDRECT_DIMENSION: Int = cellDimension * 7 / 10
 
       setOpaque(false)
       setVisible(true)
@@ -484,9 +548,15 @@ object View {
       INTERNAL_ROUNDRECT_DIMENSION = INTERNAL_ROUNDRECT_DIMENSION / 2
     }
 
+    private class LabelPlayer_Winner extends JLabel {
+      private val DIMENSION_FONT: Int = smallerSide * 7 / 100
+      setFont(new Font(f.getFontName, Font.BOLD, DIMENSION_FONT))
+      setForeground(colorProvider.getPossibleMovesColor)
+    }
+
     private class Frame extends JFrame {
       private val FRAME_TITLE = "Viking Chess - Hnefatafl"
-      private val iconApp = new ImageIcon("src/main/resources/images/iconApp.png")
+      private val iconApp = new ImageIcon(ResourceLoader.loadImage("/images/iconApp.png"))
 
       setTitle(FRAME_TITLE)
       setIconImage(iconApp.getImage)
