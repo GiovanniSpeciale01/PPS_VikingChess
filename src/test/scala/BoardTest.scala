@@ -1,5 +1,3 @@
-import java.io.FileInputStream
-
 import alice.tuprolog.{Prolog, SolveInfo, Theory}
 import model.prolog.GameRules
 import org.junit.runner.RunWith
