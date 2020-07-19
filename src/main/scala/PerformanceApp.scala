@@ -35,39 +35,39 @@ object PerformanceApp extends App {
   var game: PrologSnapshot = _
   var snapshot: GameSnapshot = _
 
-  /**
+   /**
    * IA performance sequential test
    */
-  println("Sequential")
-  for (variant <- variantList;
-       level <- levelList) {
+    println("Sequential")
+    for (variant <- variantList;
+         level <- levelList) {
 
-    game = ParserProlog.createGame(variant.toString.toLowerCase)
-    snapshot = GameSnapshotImpl(variant, game.playerToMove, game.winner, game.board, Option.empty, 0, 0)
-    miniMaxImpl = MiniMaxImpl(level)
+      game = ParserProlog.createGame(variant.toString.toLowerCase)
+      snapshot = GameSnapshotImpl(variant, game.playerToMove, game.winner, game.board, Option.empty, 0, 0)
+      miniMaxImpl = MiniMaxImpl(level)
 
-    val startTime: Long = System.currentTimeMillis()
-    miniMaxImpl.findBestMove(snapshot)
-    val finalTime: Long = System.currentTimeMillis() - startTime
+      val startTime: Long = System.currentTimeMillis()
+      miniMaxImpl.findBestMove(snapshot)
+      val finalTime: Long = System.currentTimeMillis() - startTime
 
-    println("Variant: " + variant.toString + " Level: " + level.toString + " Compute Time: " + finalTime)
-  }
+      println("Variant: " + variant.toString + " Level: " + level.toString + " Compute Time: " + finalTime)
+    }
 
-  /**
-   * IA performance parallel test
-   */
-  println("")
-  println("Parallel")
-  for (variant <- variantList;
-       level <- levelList) {
+    /**
+     * IA performance parallel test
+     */
+    println("")
+    println("Parallel")
+    for (variant <- variantList;
+         level <- levelList) {
 
-    game = ParserProlog.createGame(variant.toString.toLowerCase)
-    snapshot = GameSnapshotImpl(variant, game.playerToMove, game.winner, game.board, Option.empty, 0, 0)
-    system = ActorSystem()
+      game = ParserProlog.createGame(variant.toString.toLowerCase)
+      snapshot = GameSnapshotImpl(variant, game.playerToMove, game.winner, game.board, Option.empty, 0, 0)
+      system = ActorSystem()
 
-    val refIA = system.actorOf(Props(ArtificialIntelligence(null, level)))
-    refIA ! PerformFindBestMoveMsg(snapshot, variant,level)
-    Await.ready(system.whenTerminated, Duration(1, TimeUnit.MINUTES))
-  }
+      val refIA = system.actorOf(Props(ArtificialIntelligence(null, level)))
+      refIA ! PerformFindBestMoveMsg(snapshot, variant,level)
+      Await.ready(system.whenTerminated, Duration(1, TimeUnit.MINUTES))
+    }
 
 }

@@ -35,7 +35,7 @@ case class ArtificialIntelligence(model: ModelHnefatafl, levelIA: Level) extends
    def returnBestMovePerformance(variant: GameVariant, level: Level, startTime: Long): Receive = {
      case _: ReturnBestMoveMsg =>
        println("Variant: " + variant.toString +
-                " Level :" + level.toString +
+                " Level: " + level.toString +
                 " Compute Time: " + ( System.currentTimeMillis() - startTime ))
        context.system.terminate()
    }
