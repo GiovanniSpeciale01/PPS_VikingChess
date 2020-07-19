@@ -1,7 +1,7 @@
 # PPS_VikingChess 0.3
 Hnefatafl Game development with Scala-Java-Prolog integration.
 
-****** NEW FOR VERSION 0.3 ******
+****** NEW FOR VERSION 0.3 - COMMIT 627ecc1 ******
 
 You can play hnefatafl in 4 variants in pvp offline:
 
