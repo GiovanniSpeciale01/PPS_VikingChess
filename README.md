@@ -15,7 +15,7 @@ You can open the in game menu whenever you want during a match and select what t
 - restart the match
 - leave the match and start another one (or close the game)
 
-You can navigate through all moves of the match and undo the last move whenever you want during a match.
+You can navigate through all moves of the match and undo the last move whenever you want during a match; the last moved is highlighted.
 
 ****** NEW FOR VERSION 1.0 ******
 
