@@ -4,11 +4,6 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-/**
-  *   @author Luca Nannini
-  *   @author Giovanni Maria Speciale
-  */
-
 @RunWith(classOf[JUnitRunner])
 class MakingMovesTests extends FunSuite {
   val prolog: Prolog = new Prolog()
@@ -103,6 +98,11 @@ class MakingMovesTests extends FunSuite {
 
   test("Tests if in 7x7 board black wins capturing the king on three sides plus hostile throne.") {
     goal = prolog.solve("testBoard7KingNextToThroneCaptured3Sides.")
+    assert(goal.isSuccess)
+  }
+
+  test("Tests if in 7x7 board black doesn't win capturing the king on two sides plus hostile throne.") {
+    goal = prolog.solve("testBoard7KingNextToThroneNotCaptured2Sides.")
     assert(goal.isSuccess)
   }
 

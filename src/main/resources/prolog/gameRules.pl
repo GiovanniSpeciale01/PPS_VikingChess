@@ -1,7 +1,3 @@
-teamPPS(["John Mary Special", "Easter Lio", "Mark Cells", "Luke Hnnys"]).
-hnefataflAppOfferedBy(P) :- teamPPS(Team), member(P, Team).
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  							   Variants			               			  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -12,22 +8,22 @@ hnefataflAppOfferedBy(P) :- teamPPS(Team), member(P, Team).
 boardSize(hnefatafl, 11).
 
 %%% Defines the initial state of the board of the specified game variant
-%%% (pieces = e: empty, bp: black pawn, wp: white pawn, wk: white king).
+%%% (pieces = e: empty, b: black pawn, w: white pawn, k: white king).
 % [initPieces(+Variant, -Board)]
 initBoard(
 	hnefatafl,
     [
-        [ cell(coord(1,1),e),   cell(coord(1,2),e),   cell(coord(1,3),e),  cell(coord(1,4),bp),  cell(coord(1,5),bp),  cell(coord(1,6),bp),  cell(coord(1,7),bp),  cell(coord(1,8),bp),  cell(coord(1,9),e),  cell(coord(1,10),e),   cell(coord(1,11),e)  ],
-		[ cell(coord(2,1),e),   cell(coord(2,2),e),   cell(coord(2,3),e),  cell(coord(2,4),e),   cell(coord(2,5),e),   cell(coord(2,6),bp),  cell(coord(2,7),e),   cell(coord(2,8),e),   cell(coord(2,9),e),  cell(coord(2,10),e),   cell(coord(2,11),e)  ],
-		[ cell(coord(3,1),e),   cell(coord(3,2),e),   cell(coord(3,3),e),  cell(coord(3,4),e),   cell(coord(3,5),e),   cell(coord(3,6),e),   cell(coord(3,7),e),   cell(coord(3,8),e),   cell(coord(3,9),e),  cell(coord(3,10),e),   cell(coord(3,11),e)  ],
-		[ cell(coord(4,1),bp),  cell(coord(4,2),e),   cell(coord(4,3),e),  cell(coord(4,4),e),   cell(coord(4,5),e),   cell(coord(4,6),wp),  cell(coord(4,7),e),   cell(coord(4,8),e),   cell(coord(4,9),e),  cell(coord(4,10),e),   cell(coord(4,11),bp) ],
-		[ cell(coord(5,1),bp),  cell(coord(5,2),e),   cell(coord(5,3),e),  cell(coord(5,4),e),   cell(coord(5,5),wp),  cell(coord(5,6),wp),  cell(coord(5,7),wp),  cell(coord(5,8),e),   cell(coord(5,9),e),  cell(coord(5,10),e),   cell(coord(5,11),bp) ],
-        [ cell(coord(6,1),bp),  cell(coord(6,2),bp),  cell(coord(6,3),e),  cell(coord(6,4),wp),  cell(coord(6,5),wp),  cell(coord(6,6),wk),  cell(coord(6,7),wp),  cell(coord(6,8),wp),  cell(coord(6,9),e),  cell(coord(6,10),bp),  cell(coord(6,11),bp) ],
-        [ cell(coord(7,1),bp),  cell(coord(7,2),e),   cell(coord(7,3),e),  cell(coord(7,4),e),   cell(coord(7,5),wp),  cell(coord(7,6),wp),  cell(coord(7,7),wp),  cell(coord(7,8),e),   cell(coord(7,9),e),  cell(coord(7,10),e),   cell(coord(7,11),bp) ],
-        [ cell(coord(8,1),bp),  cell(coord(8,2),e),   cell(coord(8,3),e),  cell(coord(8,4),e),   cell(coord(8,5),e),   cell(coord(8,6),wp),  cell(coord(8,7),e),   cell(coord(8,8),e),   cell(coord(8,9),e),  cell(coord(8,10),e),   cell(coord(8,11),bp) ],
-        [ cell(coord(9,1),e),   cell(coord(9,2),e),   cell(coord(9,3),e),  cell(coord(9,4),e),   cell(coord(9,5),e),   cell(coord(9,6),e),   cell(coord(9,7),e),   cell(coord(9,8),e),   cell(coord(9,9),e),  cell(coord(9,10),e),   cell(coord(9,11),e)  ],
-        [ cell(coord(10,1),e),  cell(coord(10,2),e),  cell(coord(10,3),e), cell(coord(10,4),e),  cell(coord(10,5),e),  cell(coord(10,6),bp), cell(coord(10,7),e),  cell(coord(10,8),e),  cell(coord(10,9),e), cell(coord(10,10),e),  cell(coord(10,11),e) ],
-        [ cell(coord(11,1),e),  cell(coord(11,2),e),  cell(coord(11,3),e), cell(coord(11,4),bp), cell(coord(11,5),bp), cell(coord(11,6),bp), cell(coord(11,7),bp), cell(coord(11,8),bp), cell(coord(11,9),e), cell(coord(11,10),e),  cell(coord(11,11),e) ]
+        [c(p(1,1),e),  c(p(1,2),e),  c(p(1,3),e),  c(p(1,4),b),  c(p(1,5),b),  c(p(1,6),b),  c(p(1,7),b),  c(p(1,8),b),  c(p(1,9),e),  c(p(1,10),e),  c(p(1,11),e) ],
+		[c(p(2,1),e),  c(p(2,2),e),  c(p(2,3),e),  c(p(2,4),e),  c(p(2,5),e),  c(p(2,6),b),  c(p(2,7),e),  c(p(2,8),e),  c(p(2,9),e),  c(p(2,10),e),  c(p(2,11),e) ],
+		[c(p(3,1),e),  c(p(3,2),e),  c(p(3,3),e),  c(p(3,4),e),  c(p(3,5),e),  c(p(3,6),e),  c(p(3,7),e),  c(p(3,8),e),  c(p(3,9),e),  c(p(3,10),e),  c(p(3,11),e) ],
+		[c(p(4,1),b),  c(p(4,2),e),  c(p(4,3),e),  c(p(4,4),e),  c(p(4,5),e),  c(p(4,6),w),  c(p(4,7),e),  c(p(4,8),e),  c(p(4,9),e),  c(p(4,10),e),  c(p(4,11),b) ],
+		[c(p(5,1),b),  c(p(5,2),e),  c(p(5,3),e),  c(p(5,4),e),  c(p(5,5),w),  c(p(5,6),w),  c(p(5,7),w),  c(p(5,8),e),  c(p(5,9),e),  c(p(5,10),e),  c(p(5,11),b) ],
+        [c(p(6,1),b),  c(p(6,2),b),  c(p(6,3),e),  c(p(6,4),w),  c(p(6,5),w),  c(p(6,6),k),  c(p(6,7),w),  c(p(6,8),w),  c(p(6,9),e),  c(p(6,10),b),  c(p(6,11),b) ],
+        [c(p(7,1),b),  c(p(7,2),e),  c(p(7,3),e),  c(p(7,4),e),  c(p(7,5),w),  c(p(7,6),w),  c(p(7,7),w),  c(p(7,8),e),  c(p(7,9),e),  c(p(7,10),e),  c(p(7,11),b) ],
+        [c(p(8,1),b),  c(p(8,2),e),  c(p(8,3),e),  c(p(8,4),e),  c(p(8,5),e),  c(p(8,6),w),  c(p(8,7),e),  c(p(8,8),e),  c(p(8,9),e),  c(p(8,10),e),  c(p(8,11),b) ],
+        [c(p(9,1),e),  c(p(9,2),e),  c(p(9,3),e),  c(p(9,4),e),  c(p(9,5),e),  c(p(9,6),e),  c(p(9,7),e),  c(p(9,8),e),  c(p(9,9),e),  c(p(9,10),e),  c(p(9,11),e) ],
+        [c(p(10,1),e), c(p(10,2),e), c(p(10,3),e), c(p(10,4),e), c(p(10,5),e), c(p(10,6),b), c(p(10,7),e), c(p(10,8),e), c(p(10,9),e), c(p(10,10),e), c(p(10,11),e)],
+        [c(p(11,1),e), c(p(11,2),e), c(p(11,3),e), c(p(11,4),b), c(p(11,5),b), c(p(11,6),b), c(p(11,7),b), c(p(11,8),b), c(p(11,9),e), c(p(11,10),e), c(p(11,11),e)]
     ]
 ).
 
@@ -35,17 +31,17 @@ boardSize(tawlbwrdd, 11).
 initBoard(
 	tawlbwrdd,
     [
-        [ cell(coord(1,1),e),   cell(coord(1,2),e),   cell(coord(1,3),e),  cell(coord(1,4),e),   cell(coord(1,5),bp),  cell(coord(1,6),bp),  cell(coord(1,7),bp),  cell(coord(1,8),e),   cell(coord(1,9),e),  cell(coord(1,10),e),   cell(coord(1,11),e)  ],
-		[ cell(coord(2,1),e),   cell(coord(2,2),e),   cell(coord(2,3),e),  cell(coord(2,4),e),   cell(coord(2,5),bp),  cell(coord(2,6),e),   cell(coord(2,7),bp),  cell(coord(2,8),e),   cell(coord(2,9),e),  cell(coord(2,10),e),   cell(coord(2,11),e)  ],
-		[ cell(coord(3,1),e),   cell(coord(3,2),e),   cell(coord(3,3),e),  cell(coord(3,4),e),   cell(coord(3,5),e),   cell(coord(3,6),bp),  cell(coord(3,7),e),   cell(coord(3,8),e),   cell(coord(3,9),e),  cell(coord(3,10),e),   cell(coord(3,11),e)  ],
-        [ cell(coord(4,1),e),   cell(coord(4,2),e),   cell(coord(4,3),e),  cell(coord(4,4),e),   cell(coord(4,5),e),   cell(coord(4,6),wp),  cell(coord(4,7),e),   cell(coord(4,8),e),   cell(coord(4,9),e),  cell(coord(4,10),e),   cell(coord(4,11),e)  ],
-        [ cell(coord(5,1),bp),  cell(coord(5,2),bp),  cell(coord(5,3),e),  cell(coord(5,4),e),   cell(coord(5,5),wp),  cell(coord(5,6),wp),  cell(coord(5,7),wp),  cell(coord(5,8),e),   cell(coord(5,9),e),  cell(coord(5,10),bp),  cell(coord(5,11),bp) ],
-        [ cell(coord(6,1),bp),  cell(coord(6,2),e),   cell(coord(6,3),bp), cell(coord(6,4),wp),  cell(coord(6,5),wp),  cell(coord(6,6),wk),  cell(coord(6,7),wp),  cell(coord(6,8),wp),  cell(coord(6,9),bp), cell(coord(6,10),e),   cell(coord(6,11),bp) ],
-        [ cell(coord(7,1),bp),  cell(coord(7,2),bp),  cell(coord(7,3),e),  cell(coord(7,4),e),   cell(coord(7,5),wp),  cell(coord(7,6),wp),  cell(coord(7,7),wp),  cell(coord(7,8),e),   cell(coord(7,9),e),  cell(coord(7,10),bp),  cell(coord(7,11),bp) ],
-        [ cell(coord(8,1),e),   cell(coord(8,2),e),   cell(coord(8,3),e),  cell(coord(8,4),e),   cell(coord(8,5),e),   cell(coord(8,6),wp),  cell(coord(8,7),e),   cell(coord(8,8),e),   cell(coord(8,9),e),  cell(coord(8,10),e),   cell(coord(8,11),e)  ],
-        [ cell(coord(9,1),e),   cell(coord(9,2),e),   cell(coord(9,3),e),  cell(coord(9,4),e),   cell(coord(9,5),e),   cell(coord(9,6),bp),  cell(coord(9,7),e),   cell(coord(9,8),e),   cell(coord(9,9),e),  cell(coord(9,10),e),   cell(coord(9,11),e)  ],
-        [ cell(coord(10,1),e),  cell(coord(10,2),e),  cell(coord(10,3),e), cell(coord(10,4),e),  cell(coord(10,5),bp), cell(coord(10,6),e),  cell(coord(10,7),bp), cell(coord(10,8),e),  cell(coord(10,9),e), cell(coord(10,10),e),  cell(coord(10,11),e) ],
-        [ cell(coord(11,1),e),  cell(coord(11,2),e),  cell(coord(11,3),e), cell(coord(11,4),e),  cell(coord(11,5),bp), cell(coord(11,6),bp), cell(coord(11,7),bp), cell(coord(11,8),e),  cell(coord(11,9),e), cell(coord(11,10),e),  cell(coord(11,11),e) ]
+        [c(p(1,1),e),  c(p(1,2),e),  c(p(1,3),e),  c(p(1,4),e),  c(p(1,5),b),  c(p(1,6),b),  c(p(1,7),b),  c(p(1,8),e),  c(p(1,9),e),  c(p(1,10),e),  c(p(1,11),e) ],
+		[c(p(2,1),e),  c(p(2,2),e),  c(p(2,3),e),  c(p(2,4),e),  c(p(2,5),b),  c(p(2,6),e),  c(p(2,7),b),  c(p(2,8),e),  c(p(2,9),e),  c(p(2,10),e),  c(p(2,11),e) ],
+		[c(p(3,1),e),  c(p(3,2),e),  c(p(3,3),e),  c(p(3,4),e),  c(p(3,5),e),  c(p(3,6),b),  c(p(3,7),e),  c(p(3,8),e),  c(p(3,9),e),  c(p(3,10),e),  c(p(3,11),e) ],
+        [c(p(4,1),e),  c(p(4,2),e),  c(p(4,3),e),  c(p(4,4),e),  c(p(4,5),e),  c(p(4,6),w),  c(p(4,7),e),  c(p(4,8),e),  c(p(4,9),e),  c(p(4,10),e),  c(p(4,11),e) ],
+        [c(p(5,1),b),  c(p(5,2),b),  c(p(5,3),e),  c(p(5,4),e),  c(p(5,5),w),  c(p(5,6),w),  c(p(5,7),w),  c(p(5,8),e),  c(p(5,9),e),  c(p(5,10),b),  c(p(5,11),b) ],
+        [c(p(6,1),b),  c(p(6,2),e),  c(p(6,3),b),  c(p(6,4),w),  c(p(6,5),w),  c(p(6,6),k),  c(p(6,7),w),  c(p(6,8),w),  c(p(6,9),b),  c(p(6,10),e),  c(p(6,11),b) ],
+        [c(p(7,1),b),  c(p(7,2),b),  c(p(7,3),e),  c(p(7,4),e),  c(p(7,5),w),  c(p(7,6),w),  c(p(7,7),w),  c(p(7,8),e),  c(p(7,9),e),  c(p(7,10),b),  c(p(7,11),b) ],
+        [c(p(8,1),e),  c(p(8,2),e),  c(p(8,3),e),  c(p(8,4),e),  c(p(8,5),e),  c(p(8,6),w),  c(p(8,7),e),  c(p(8,8),e),  c(p(8,9),e),  c(p(8,10),e),  c(p(8,11),e) ],
+        [c(p(9,1),e),  c(p(9,2),e),  c(p(9,3),e),  c(p(9,4),e),  c(p(9,5),e),  c(p(9,6),b),  c(p(9,7),e),  c(p(9,8),e),  c(p(9,9),e),  c(p(9,10),e),  c(p(9,11),e) ],
+        [c(p(10,1),e), c(p(10,2),e), c(p(10,3),e), c(p(10,4),e), c(p(10,5),b), c(p(10,6),e), c(p(10,7),b), c(p(10,8),e), c(p(10,9),e), c(p(10,10),e), c(p(10,11),e)],
+        [c(p(11,1),e), c(p(11,2),e), c(p(11,3),e), c(p(11,4),e), c(p(11,5),b), c(p(11,6),b), c(p(11,7),b), c(p(11,8),e), c(p(11,9),e), c(p(11,10),e), c(p(11,11),e)]
     ]
 ).
 
@@ -53,16 +49,15 @@ boardSize(tablut, 9).
 initBoard(
     tablut,
     [
-        [ cell(coord(1,1),e),   cell(coord(1,2),e),   cell(coord(1,3),e),  cell(coord(1,4),bp),  cell(coord(1,5),bp),  cell(coord(1,6),bp),  cell(coord(1,7),e),   cell(coord(1,8),e),   cell(coord(1,9),e)  ],
-        [ cell(coord(2,1),e),   cell(coord(2,2),e),   cell(coord(2,3),e),  cell(coord(2,4),e),   cell(coord(2,5),bp),  cell(coord(2,6),e),   cell(coord(2,7),e),   cell(coord(2,8),e),   cell(coord(2,9),e)  ],
-        [ cell(coord(3,1),e),   cell(coord(3,2),e),   cell(coord(3,3),e),  cell(coord(3,4),e),   cell(coord(3,5),wp),  cell(coord(3,6),e),   cell(coord(3,7),e),   cell(coord(3,8),e),   cell(coord(3,9),e)  ],
-        [ cell(coord(4,1),bp),  cell(coord(4,2),e),   cell(coord(4,3),e),  cell(coord(4,4),e),   cell(coord(4,5),wp),  cell(coord(4,6),e),   cell(coord(4,7),e),   cell(coord(4,8),e),   cell(coord(4,9),bp) ],
-        [ cell(coord(5,1),bp),  cell(coord(5,2),bp),  cell(coord(5,3),wp), cell(coord(5,4),wp),  cell(coord(5,5),wk),  cell(coord(5,6),wp),  cell(coord(5,7),wp),  cell(coord(5,8),bp),  cell(coord(5,9),bp) ],
-        [ cell(coord(6,1),bp),  cell(coord(6,2),e),   cell(coord(6,3),e),  cell(coord(6,4),e),   cell(coord(6,5),wp),  cell(coord(6,6),e),   cell(coord(6,7),e),   cell(coord(6,8),e),   cell(coord(6,9),bp) ],
-        [ cell(coord(7,1),e),   cell(coord(7,2),e),   cell(coord(7,3),e),  cell(coord(7,4),e),   cell(coord(7,5),wp),  cell(coord(7,6),e),   cell(coord(7,7),e),   cell(coord(7,8),e),   cell(coord(7,9),e)  ],
-        [ cell(coord(8,1),e),   cell(coord(8,2),e),   cell(coord(8,3),e),  cell(coord(8,4),e),   cell(coord(8,5),bp),  cell(coord(8,6),e),   cell(coord(8,7),e),   cell(coord(8,8),e),   cell(coord(8,9),e)  ],
-        [ cell(coord(9,1),e),   cell(coord(9,2),e),   cell(coord(9,3),e),  cell(coord(9,4),bp),  cell(coord(9,5),bp),  cell(coord(9,6),bp),  cell(coord(9,7),e),   cell(coord(9,8),e),   cell(coord(9,9),e)  ]
-
+        [c(p(1,1),e), c(p(1,2),e), c(p(1,3),e), c(p(1,4),b), c(p(1,5),b), c(p(1,6),b), c(p(1,7),e), c(p(1,8),e), c(p(1,9),e)],
+        [c(p(2,1),e), c(p(2,2),e), c(p(2,3),e), c(p(2,4),e), c(p(2,5),b), c(p(2,6),e), c(p(2,7),e), c(p(2,8),e), c(p(2,9),e)],
+        [c(p(3,1),e), c(p(3,2),e), c(p(3,3),e), c(p(3,4),e), c(p(3,5),w), c(p(3,6),e), c(p(3,7),e), c(p(3,8),e), c(p(3,9),e)],
+        [c(p(4,1),b), c(p(4,2),e), c(p(4,3),e), c(p(4,4),e), c(p(4,5),w), c(p(4,6),e), c(p(4,7),e), c(p(4,8),e), c(p(4,9),b)],
+        [c(p(5,1),b), c(p(5,2),b), c(p(5,3),w), c(p(5,4),w), c(p(5,5),k), c(p(5,6),w), c(p(5,7),w), c(p(5,8),b), c(p(5,9),b)],
+        [c(p(6,1),b), c(p(6,2),e), c(p(6,3),e), c(p(6,4),e), c(p(6,5),w), c(p(6,6),e), c(p(6,7),e), c(p(6,8),e), c(p(6,9),b)],
+        [c(p(7,1),e), c(p(7,2),e), c(p(7,3),e), c(p(7,4),e), c(p(7,5),w), c(p(7,6),e), c(p(7,7),e), c(p(7,8),e), c(p(7,9),e)],
+        [c(p(8,1),e), c(p(8,2),e), c(p(8,3),e), c(p(8,4),e), c(p(8,5),b), c(p(8,6),e), c(p(8,7),e), c(p(8,8),e), c(p(8,9),e)],
+        [c(p(9,1),e), c(p(9,2),e), c(p(9,3),e), c(p(9,4),b), c(p(9,5),b), c(p(9,6),b), c(p(9,7),e), c(p(9,8),e), c(p(9,9),e)]
     ]
 ).
 
@@ -70,15 +65,20 @@ boardSize(brandubh, 7).
 initBoard(
     brandubh,
     [
-        [ cell(coord(1,1),e),   cell(coord(1,2),e),   cell(coord(1,3),e),  cell(coord(1,4),bp),  cell(coord(1,5),e),   cell(coord(1,6),e),   cell(coord(1,7),e)  ],
-        [ cell(coord(2,1),e),   cell(coord(2,2),e),   cell(coord(2,3),e),  cell(coord(2,4),bp),  cell(coord(2,5),e),   cell(coord(2,6),e),   cell(coord(2,7),e)  ],
-        [ cell(coord(3,1),e),   cell(coord(3,2),e),   cell(coord(3,3),e),  cell(coord(3,4),wp),  cell(coord(3,5),e),   cell(coord(3,6),e),   cell(coord(3,7),e)  ],
-        [ cell(coord(4,1),bp),  cell(coord(4,2),bp),  cell(coord(4,3),wp), cell(coord(4,4),wk),  cell(coord(4,5),wp),  cell(coord(4,6),bp),  cell(coord(4,7),bp) ],
-        [ cell(coord(5,1),e),   cell(coord(5,2),e),   cell(coord(5,3),e),  cell(coord(5,4),wp),  cell(coord(5,5),e),   cell(coord(5,6),e),   cell(coord(5,7),e)  ],
-        [ cell(coord(6,1),e),   cell(coord(6,2),e),   cell(coord(6,3),e),  cell(coord(6,4),bp),  cell(coord(6,5),e),   cell(coord(6,6),e),   cell(coord(6,7),e)  ],
-        [ cell(coord(7,1),e),   cell(coord(7,2),e),   cell(coord(7,3),e),  cell(coord(7,4),bp),  cell(coord(7,5),e),   cell(coord(7,6),e),   cell(coord(7,7),e)  ]
+        [c(p(1,1),e), c(p(1,2),e), c(p(1,3),e), c(p(1,4),b), c(p(1,5),e), c(p(1,6),e), c(p(1,7),e)],
+        [c(p(2,1),e), c(p(2,2),e), c(p(2,3),e), c(p(2,4),b), c(p(2,5),e), c(p(2,6),e), c(p(2,7),e)],
+        [c(p(3,1),e), c(p(3,2),e), c(p(3,3),e), c(p(3,4),w), c(p(3,5),e), c(p(3,6),e), c(p(3,7),e)],
+        [c(p(4,1),b), c(p(4,2),b), c(p(4,3),w), c(p(4,4),k), c(p(4,5),w), c(p(4,6),b), c(p(4,7),b)],
+        [c(p(5,1),e), c(p(5,2),e), c(p(5,3),e), c(p(5,4),w), c(p(5,5),e), c(p(5,6),e), c(p(5,7),e)],
+        [c(p(6,1),e), c(p(6,2),e), c(p(6,3),e), c(p(6,4),b), c(p(6,5),e), c(p(6,6),e), c(p(6,7),e)],
+        [c(p(7,1),e), c(p(7,2),e), c(p(7,3),e), c(p(7,4),b), c(p(7,5),e), c(p(7,6),e), c(p(7,7),e)]
     ]
 ).
+
+%%% Returns if the specified +Coordinate corresponds to an initial pawn cell.
+% [isInitialPawnCoord(+GameVariant, +Coordinate)]
+isInitialPawnCoord(V, p(X, Y)) :-
+	initBoard(V, B), ithElem(X, B, R), ithElem(Y, R, c(C, P)), isPawn(P).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,7 +87,7 @@ initBoard(
 
 
 %%% Puts +Element in last position of +List.
-% addLast(+List, +Element, -OutputList)
+% [addLast(+List, +Element, -OutputList)]
 addLast([], X, [X]).
 addLast([X|Xs], Y, [X|L]) :- addLast(Xs, Y, L).
 
@@ -137,7 +137,7 @@ setIthElem(E, I, [X|Xs], C, [X|R]) :- C2 is C + 1, setIthElem(E, I, Xs, C2, R).
 
 %%% Gets the -Cell located in the specified +Coordinate.
 % [getCell(+Board, +Coordinate, -Cell)]
-getCell(B, coord(X, Y), C) :- ithElem(X, B, R), ithElem(Y, R, C).
+getCell(B, p(X, Y), C) :- ithElem(X, B, R), ithElem(Y, R, C).
 
 %%% Gets a list of cells located in a list of coordinates.
 % [getCellList(+Board, +CoordList, -CellList)]
@@ -146,9 +146,9 @@ getCellList(B, [H|T], [O|Os]) :- getCell(B, H, O), getCellList(B, T, Os).
 
 %%% Sets a +Cell in the right location on a +Board.
 % [setCell(+Board, +Cell, -OutputBoard)]
-setCell(B, cell(coord(X, Y), P), O) :-
+setCell(B, c(p(X, Y), P), O) :-
 		ithElem(X, B, R),
-		setIthElem(cell(coord(X, Y), P), Y, R, NR),
+		setIthElem(c(p(X, Y), P), Y, R, NR),
 		setIthElem(NR, X, B, O).
 
 %%% Sets a list of cells in the right locations on a +Board.
@@ -158,14 +158,14 @@ setCellList(B, [H|T], O) :- setCell(B, H, NB), setCellList(NB, T, O).
 
 %%% Returns the coordinates of corner cells in a board of the specified +BoardSize.
 % [cornerCellCoord(+BoardSize, -Coordinate)]
-cornerCellCoord(_, coord(1, 1)).
-cornerCellCoord(S, coord(1, S)).
-cornerCellCoord(S, coord(S, 1)).
-cornerCellCoord(S, coord(S, S)).
+cornerCellCoord(_, p(1, 1)).
+cornerCellCoord(S, p(1, S)).
+cornerCellCoord(S, p(S, 1)).
+cornerCellCoord(S, p(S, S)).
 
 %%% Defines the coordinate of the central cell in a board of the specified +BoardSize.
-% [centralCellCoord(+BoardSize, -Coordinate))]
-centralCellCoord(S, coord(X, X)) :- X is (S // 2) + 1.
+% [centralCellp(+BoardSize, -Coordinate))]
+centralCellCoord(S, p(X, X)) :- X is (S // 2) + 1.
 
 %%% Returns all corner cells of spiecified +BoardSize.
 % [allCornerCells(+BoardSize, -ListCornerCells)]
@@ -177,8 +177,8 @@ specialCellsCoords(S, O) :- allCornerCells(S, C), centralCellCoord(S, C1), appen
 
 %%% Returns if cell lcoated in +Coordinate is a special cell in a board
 %%% of the specified +BoardSize.
-% [isSpecialCell(+BoardSize, +Coordinate)]
-isSpecialCell(S, C) :- specialCellsCoords(S, L), member(C, L).
+% [isSpecialCoord(+BoardSize, +Coordinate)]
+isSpecialCoord(S, C) :- specialCellsCoords(S, L), member(C, L).
 
 %%% Returns the list of the coordinates next to the central cell.
 % [nextToCentralCellCoords(+BoardSize, -CoordinateList)]
@@ -187,25 +187,25 @@ nextToCentralCellCoords(S, [U, R, D, L]) :-
 		rightCentralCellCoord(S, R),
 		downCentralCellCoord(S, D),
 		leftCentralCellCoord(S, L).
-upCentralCellCoord(S, coord(X, Y)) :- X is (S // 2), Y is (S // 2) + 1.
-rightCentralCellCoord(S, coord(X, Y)) :- X is (S // 2) + 1, Y is (S // 2) + 2.
-downCentralCellCoord(S, coord(X, Y)) :- rightCentralCellCoord(S, coord(Y, X)).
-leftCentralCellCoord(S, coord(X, Y)) :- upCentralCellCoord(S, coord(Y, X)).
+upCentralCellCoord(S, p(X, Y)) :- X is (S // 2), Y is (S // 2) + 1.
+rightCentralCellCoord(S, p(X, Y)) :- X is (S // 2) + 1, Y is (S // 2) + 2.
+downCentralCellCoord(S, p(X, Y)) :- rightCentralCellCoord(S, p(Y, X)).
+leftCentralCellCoord(S, p(X, Y)) :- upCentralCellCoord(S, p(Y, X)).
 
 %%% Returns the -PlayerOwner of the piece located in the specified +Cell.
 % [playerOwner(+Cell, -PlayerOwner)]
-cellOwner(cell(_, P), O) :- pieceOwner(P, O).
+cellOwner(c(_, P), O) :- pieceOwner(P, O).
 
 %%% Returns the -PlayerOwner of a +Piece.
 % [pieceOwner(+Piece, -PlayerOwner)]
-pieceOwner(wp, w).
-pieceOwner(wk, w).
-pieceOwner(bp, b).
+pieceOwner(w, w).
+pieceOwner(k, w).
+pieceOwner(b, b).
 
 %%% Returns if a +Piece is a pawn.
 % isPawn(+Piece)
-isPawn(bp).
-isPawn(wp).
+isPawn(b).
+isPawn(w).
 
 %%% Returns all the orthogonal cells of the specified +Coordinate in the given +Board,
 %%% divided in all four directions and ordered from closest to farthest.
@@ -219,11 +219,11 @@ orthogonalCells(S, B, C, U, R, D, L) :-
 %%% Returns all the cells above the specified +Coordinate in the given +Board,
 %%% ordered from closest to farthest.
 % [upCells(+Board, +Coord, -UpCells)]
-upCells(B, coord(FromX, FromY), U) :-
+upCells(B, p(FromX, FromY), U) :-
 		% (X, FromY) coordinates where X < FromX
 		PrevX is FromX - 1,
 		sequence(1, PrevX, Xs),
-		findall(coord(X, FromY), member(X, Xs), Coords),
+		findall(p(X, FromY), member(X, Xs), Coords),
 		getCellList(B, Coords, U1),
 		% ordering them from nearest to closest to +Coord
 		reverse(U1, U).
@@ -231,7 +231,7 @@ upCells(B, coord(FromX, FromY), U) :-
 %%% Returns all the cells on the right of the specified +Coordinate in the given +Board,
 %%% ordered from closest to farthest.
 % [rightCells(+BoardSize, +Board, +Coord, -LeftCells)]
-rightCells(S, B, coord(FromX, FromY), R) :-
+rightCells(S, B, p(FromX, FromY), R) :-
 		% taking last S - FromY elements from the FromX row
 		NToTake is S - FromY,
 		ithElem(FromX, B, Row),
@@ -242,17 +242,17 @@ rightCells(S, B, coord(FromX, FromY), R) :-
 %%% Returns all the cells below the specified +Coordinate in the given +Board,
 %%% ordered from closest to farthest.
 % [downCells(+BoardSize, +Board, +Coord, -DownCells)]
-downCells(S, B, coord(FromX, FromY), D) :-
+downCells(S, B, p(FromX, FromY), D) :-
 		% (X, FromY) coordinates where X > FromX
 		NextX is FromX + 1,
 		sequence(NextX, S, Xs),
-		findall(coord(X, FromY), member(X, Xs), Coords),
+		findall(p(X, FromY), member(X, Xs), Coords),
 		getCellList(B, Coords, D).
 
 %%% Returns all the cells on the left of the specified +Coordinate in the given +Board,
 %%% ordered from closest to farthest.
 % [leftCells(+Board, +Coord, -LeftCells)]
-leftCells(B, coord(FromX, FromY), L) :-
+leftCells(B, p(FromX, FromY), L) :-
 		% taking first FromY - 1 elements from the FromX row
 		NToTake is FromY - 1,
 		ithElem(FromX, B, Row),
@@ -272,8 +272,8 @@ getNAdjacentCells(S, B, N, C, U, R, D, L) :-
 
 %%% Checks if each cell of a list contains a black pawn.
 % [allBlackPawns(+CellsList)]
-allBlackPawns([cell(_, bp)]).
-allBlackPawns([cell(_, bp)|T]) :- allBlackPawns(T).
+allBlackPawns([c(_, b)]).
+allBlackPawns([c(_, b)|T]) :- allBlackPawns(T).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -304,6 +304,10 @@ gameBoard((_, _, _, B), B).
 % [gameWinner(+Game, -Winner)
 gameWinner((_, _, W, _), W).
 
+%%% Undoes a move in +CurrentGame resetting player to move, winner and
+%%% board as the specified +OldBoard.
+% [undoMove(+CurrentGame, +OldBoard, -OldGame)]
+undoMove((V, P, _, B), OB, (V, O, n, OB)) :- nextPlayerToMove(P, O).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  				              Possible Moves		                      %%
@@ -368,7 +372,7 @@ only_ToMove([(_, ToCoord)|T], [ToCoord|T1]) :- only_ToMove(T, T1).
 %%% (NB: assumes that +Cell contains a PlayerToMove piece, if you need to check piece
 %%% player you may want to use getCoordPossibleMoves!)
 % [possibleMoves(+Game, +Cell, -ListOfPossibleMoves)]
-possibleMoves((V, _, _, B), cell(FromCoord, P), O) :-
+possibleMoves((V, _, _, B), c(FromCoord, P), O) :-
 		boardSize(V, S),
 		orthogonalCells(S, B, FromCoord, U, R, D, L),
 		cutAfterPieces(U, R, D, L, FromCoord, M),
@@ -378,10 +382,10 @@ possibleMoves((V, _, _, B), cell(FromCoord, P), O) :-
 %%% containing a piece; maps them as moves like (FromCoordinate, ToCoordinate).
 % [cut(+SequenceOfCells, +FromCoordinate, -LineMoves)]
 cut([], FromCoord, []).
-cut([cell(ToCoord, e)|T], FromCoord, [(FromCoord, ToCoord)|O]) :-
+cut([c(ToCoord, e)|T], FromCoord, [(FromCoord, ToCoord)|O]) :-
 		cut(T, FromCoord, O).
 % Cuts as soon as it founds a piece
-cut([cell(coord(_, _), P)|_], _, []) :- P \= e, !.
+cut([c(p(_, _), P)|_], _, []) :- P \= e, !.
 
 %%% Cuts four sequences of cells (one for each direction) as soons as it founds
 %%% in each one a cell containing a piece; maps them as moves like (FromCoordinate, ToCoordinate).
@@ -395,9 +399,9 @@ cutAfterPieces(U, R, D, L, FromCoord, O) :-
 
 %%% Filters a list of moves for a piece removing special cells (corners and center) if the piece is a pawn.
 % [filterIfPawn(+PieceType, +BoardSize, +ListOfMoves, -FilteredMovesList)]
-filterIfPawn(bp, S, L, O) :- filterSpecialCells(S, L, O).
-filterIfPawn(wp, S, L, O) :- filterSpecialCells(S, L, O).
-filterIfPawn(wk, _, L, L).
+filterIfPawn(b, S, L, O) :- filterSpecialCells(S, L, O).
+filterIfPawn(w, S, L, O) :- filterSpecialCells(S, L, O).
+filterIfPawn(k, _, L, L).
 
 %%% Filters a list of moves removing special cells (corners and center).
 % [filterSpecialCells(+BoardSize, +MovesList, -FilteredMovesList)]
@@ -441,7 +445,7 @@ makeMove((V, P, _, B), FromCoord, ToCoord, NC, (V, O, W, NB)) :-
 %%% Moves the piece located in +FromCoordinate to +ToCoordinate and performs captures.
 % [move(+BoardSize, +Board, +FromCoordinate, +ToCoordinate, -NumberOfCaptures, -OutputBoard)]
 move(S, B, FromCoord, ToCoord, NC, O) :-
-		getCell(B, FromCoord, cell(FromCoord, P)),
+		getCell(B, FromCoord, c(FromCoord, P)),
 		writeMove(B, P, FromCoord, ToCoord, NB),
 		pieceOwner(P, Player),
 		checkAllCaptures(S, NB, Player, ToCoord, LC),
@@ -453,34 +457,23 @@ move(S, B, FromCoord, ToCoord, NC, O) :-
 %%% sets +Piece in ToCoordinate and sets empty in +FromCoordinate.
 % [writeMove(+Board, +Piece, +FromCoordinate, +ToCoordinate, -NewBoard)]
 writeMove(B, P, FromCoord, ToCoord, NB) :-
-		setCell(B, cell(ToCoord, P), B1),
-		setCell(B1, cell(FromCoord, e), NB).
+		setCell(B, c(ToCoord, P), B1),
+		setCell(B1, c(FromCoord, e), NB).
 
 %%% Returns the coordinates of the captured pawn on a side,
 %%% returns an empty list if there are no captures.
 % [checkCapture(+Size, +PlayerWhoMoved, +AdjacentCells, -CapturesList)]
-checkCapture(_, _, [], []).
-checkCapture(_, _, [X], []).
-checkCapture(_, _, [cell(_, e)|_], []).
-checkCapture(_, Player, [cell(_, Piece)|_], []) :-
-		pieceOwner(Piece, Player).
-checkCapture(_, Player, [cell(_, Piece),cell(_, Piece1)], []) :-
+checkCapture(_, Player, [c(C, Piece),c(C1, Piece1)], [C]) :-
+        isPawn(Piece),
+         opponent(Player, Opponent),
 		pieceOwner(Piece, Opponent),
-		pieceOwner(Piece1, Opponent).
-% King captured triggers the end of the game so it is evaluated in checkVictory,
-% moreover, the rule for capturing the king is different
-checkCapture(_, Player, [cell(_, wk),_], []).
-checkCapture(_, Player, [cell(C, Piece),cell(C1, Piece1)], [C]) :-
-		pieceOwner(Piece, Opponent),
-		pieceOwner(Piece1, Player),
-		isPawn(Piece).
-checkCapture(S, Player, [cell(C, Piece),cell(C1, e)], [C]) :-
-		pieceOwner(Piece, Opponent),
+		pieceOwner(Piece1, Player), !.
+checkCapture(S, Player, [c(C, Piece),c(C1, e)], [C]) :-
 		isPawn(Piece),
-		isSpecialCell(S, C1), !.
-checkCapture(S, Player, [cell(C, Piece),cell(C1, e)], []) :-
+		opponent(Player, Opponent),
 		pieceOwner(Piece, Opponent),
-		not(isSpecialCell(S, C1)).
+		isSpecialCoord(S, C1), !.
+checkCapture(_, _, _, []).
 
 %%% Returns all captured pieces coordinates after +PlayerWhoMoved moved a piece to +MovedCoord,
 %%% returns an empty list if there are no captures.
@@ -496,7 +489,7 @@ checkAllCaptures(S, B, P, MovedCoord, C) :-
 %%% Maps a list of coordinates to a list of empty cells.
 % [mapCoordsToCapturedCells(+ListOfCoords, -ListOfEmptyCells)]
 mapCoordsToCapturedCells([], []).
-mapCoordsToCapturedCells([H|T], [cell(H, e)|T1]) :- mapCoordsToCapturedCells(T, T1).
+mapCoordsToCapturedCells([H|T], [c(H, e)|T1]) :- mapCoordsToCapturedCells(T, T1).
 
 %%% Returns the winner of the game specified with +GameVariant, current +Board,
 %%% last +PlayerWhoMoved and last move arriving +MoveCoordinate.
@@ -527,7 +520,7 @@ onePossibleMoveIsAvalaible(G) :- gameBoard(G, B), findAnyMove(G, B).
 %%% Finds the king's coordinate in the specified +Board.
 % [findKing(+Board, -KingCoordinate)]
 findKing([[]|Rs], C) :- findKing(Rs, C).
-findKing([[cell(C, wk)|T]|Rs], C) :- !.
+findKing([[c(C, k)|T]|Rs], C) :- !.
 findKing([[_|T]|Rs], C) :- findKing([T|Rs], C).
 
 %%% Returns if the king is on throne (central cell).
@@ -537,8 +530,7 @@ kingOnThrone(S, C) :- centralCellCoord(S, C).
 %%% Returns if the king is on a cell next to the throne (central cell).
 % [kingNextToThrone(+BoardSize, +KingCoordinate)]
 kingNextToThrone(S, C) :-
-		nextToCentralCellCoords(S, [U, R, D, L]),
-		append4(U, R, D, L, Around),
+		nextToCentralCellCoords(S, Around),
 		member(C, Around).
 
 %%% Returns king's adjacent cells divided in Horizontal and Vertical (one cell per side).
@@ -580,16 +572,18 @@ checkKingCapturedSmallBoard(S, C, H, V, MoveCoord) :-
 % [kingCapturedFourSides(+KingHorizAdjacentCells, +KingVertAdjacentCells)]
 kingCapturedFourSides(V, H) :-
 		append(V, H, Around),
-		allBlackPawns(Around), !.
+		allBlackPawns(Around),
+		size(Around, 4), !.
 
 %%% Checks if the king has been captured surrounded on three sides and
 %%% hostile central cell in the last one.
 % [kingCapturedThreeSidesAndThrone(+BoardSize, +KingHorizAdjacentCells, +KingVertAdjacentCells, +LastMoveCoordinate)]
 kingCapturedThreeSidesAndThrone(S, H, V, MoveCoord) :-
 		append(H, V, Around),
-		member(cell(MoveCoord, _), Around),
+		member(c(MoveCoord, _), Around),
 		centralCellCoord(S, Central),
-		delete(cell(Central, _), Around, FilteredAround),
+		member(c(Central, _), Around),
+		delete(c(Central, _), Around, FilteredAround),
 		allBlackPawns(FilteredAround), !.
 
 %%% Checks if the king has been captured surrounded on two sides.
@@ -599,7 +593,7 @@ kingCapturedTwoSides(H, V, MoveCoord) :-
 %%% Checks if the king has been captured surrounded on two sides in specified line.
 % [kingCapturedTwoSides(+KingHorizAdjacentCells, +KingLineAdjacentCells)]
 kingCapturedInLine(MoveCoord, LineSides) :-
-		member(cell(MoveCoord, _), LineSides),
+		member(c(MoveCoord, _), LineSides),
 		size(LineSides, S),
 		S > 1, % can't be captured on edge of the board
 		allBlackPawns(LineSides).
@@ -680,19 +674,19 @@ allTestsLists :-
 % yes
 testGetCell :-
 		initBoard(hnefatafl, B),
-		getCell(B, coord(6,6), cell(coord(6,6),wk)).
+		getCell(B, p(6,6), c(p(6,6),k)).
 % yes
 testGetCell1 :-
 		initBoard(hnefatafl, B),
-		getCell(B, coord(1,11), cell(coord(1,11),e)).
+		getCell(B, p(1,11), c(p(1,11),e)).
 % no
 testGetOutCell :-
 		initBoard(hnefatafl, B),
-		getCell(B, coord(1,12), C).
+		getCell(B, p(1,12), C).
 
 % yes
-coordOne(coord(3,6)).
-coordTwo(coord(7,8)).
+coordOne(p(3,6)).
+coordTwo(p(7,8)).
 testGetCellList :-
 		initBoard(hnefatafl, B),
 		coordOne(C), coordTwo(C1),
@@ -701,7 +695,7 @@ testGetCellList :-
 		equalLists(O, [Cell1,Cell2]).
 
 % yes
-cellOne(cell(C,elem)) :- coordOne(C).
+cellOne(c(C,elem)) :- coordOne(C).
 testSetCell :-
 		initBoard(hnefatafl, B),
 		cellOne(C),
@@ -711,10 +705,10 @@ testSetCell :-
 % no
 testSetOutCell :-
 		initBoard(hnefatafl, B),
-		setCell(B, cell(coord(1, 12)), NB).
+		setCell(B, c(p(1, 12)), NB).
 
 % yes
-cellTwo(cell(C,elem)) :- coordTwo(C).
+cellTwo(c(C,elem)) :- coordTwo(C).
 testSetCellList :-
 		initBoard(hnefatafl, B),
 		cellOne(C), cellTwo(C1),
@@ -725,41 +719,41 @@ testSetCellList :-
 % yes
 testSpecialCellsBoard7 :-
 		boardSize(brandubh, S),
-		specialCellsCoords(S, [coord(1,1),coord(1,7),coord(7,1),coord(7,7),coord(4,4)]).
+		specialCellsCoords(S, [p(1,1),p(1,7),p(7,1),p(7,7),p(4,4)]).
 % yes
 testSpecialCellsBoard11 :-
 		boardSize(tawlbwrdd, S),
-		specialCellsCoords(S, [coord(1,1),coord(1,11),coord(11,1),coord(11,11),coord(6,6)]).
+		specialCellsCoords(S, [p(1,1),p(1,11),p(11,1),p(11,11),p(6,6)]).
 % yes
-testIsSpecialCell :-
+testIsSpecialCoord :-
 		boardSize(tawlbwrdd, S),
 		specialCellsCoords(S, [H|T]),
-		isSpecialCell(S, H).
+		isSpecialCoord(S, H).
 
 % yes
 testCellOwner :-
-		cellOwner(cell(fakeCoord,wp), w).
+		cellOwner(c(fakeCoord,w), w).
 % yes
 testCellOwner1 :-
-		cellOwner(cell(fakeCoord,wk), w).
+		cellOwner(c(fakeCoord,k), w).
 % no
 testCellOwner2 :-
-		cellOwner(cell(fakeCoord,bp), w).
+		cellOwner(c(fakeCoord,b), w).
 % yes
 testCellOwner3 :-
-		cellOwner(cell(fakeCoord,bp), b).
+		cellOwner(c(fakeCoord,b), b).
 
-% ( coordOne = coord(3,6) )
+% ( coordOne = p(3,6) )
 % yes
 testOrthogonalCells :-
 		initBoard(brandubh, B),
 		boardSize(brandubh, S),
 		coordOne(C),
 		orthogonalCells(S, B, C,
-				[cell(coord(2,6),e),cell(coord(1,6),e)],
-				[cell(coord(3,7),e)],
-				[cell(coord(4,6),bp),cell(coord(5,6),e),cell(coord(6,6),e),cell(coord(7,6),e)],
-				[cell(coord(3,5),e),cell(coord(3,4),wp),cell(coord(3,3),e),cell(coord(3,2),e),cell(coord(3,1),e)]).
+				[c(p(2,6),e),c(p(1,6),e)],
+				[c(p(3,7),e)],
+				[c(p(4,6),b),c(p(5,6),e),c(p(6,6),e),c(p(7,6),e)],
+				[c(p(3,5),e),c(p(3,4),w),c(p(3,3),e),c(p(3,2),e),c(p(3,1),e)]).
 
 % yes
 nTest(3).
@@ -775,11 +769,11 @@ testNAdjacentCells :-
 		size(L, LU), LU =< N.
 
 % yes
-testAllBlackPawns :- allBlackPawns([cell(c,bp),cell(c,bp)]).
+testAllBlackPawns :- allBlackPawns([c(c,b),c(c,b)]).
 % no
-testAllBlackPawns1 :- allBlackPawns([cell(c,wp),cell(c,bp)]).
+testAllBlackPawns1 :- allBlackPawns([c(c,w),c(c,b)]).
 % no
-testAllBlackPawns2 :- allBlackPawns([cell(c,bp),cell(c,e)]).
+testAllBlackPawns2 :- allBlackPawns([c(c,b),c(c,e)]).
 
 % yes
 allTestsBoard :-
@@ -792,7 +786,7 @@ allTestsBoard :-
 		testSetCellList,
 		testSpecialCellsBoard7,
 		testSpecialCellsBoard11,
-		testIsSpecialCell,
+		testIsSpecialCoord,
 		testCellOwner,
 		testCellOwner1,
 		not(testCellOwner2),
@@ -823,32 +817,32 @@ testGamePossibleMoves1 :-
 % yes
 testGetCoordPossibleMoves :-
 		newGame(tablut, G),
-		getCoordPossibleMoves(G, coord(1,4), [coord(2,4),coord(3,4),coord(4,4),coord(1,3),coord(1,2)]).
+		getCoordPossibleMoves(G, p(1,4), [p(2,4),p(3,4),p(4,4),p(1,3),p(1,2)]).
 % yes
 testGetCoordPossibleMovesEmptyCell :-
 		newGame(hnefatafl, G),
-		getCoordPossibleMoves(G, coord(1,1), []).
+		getCoordPossibleMoves(G, p(1,1), []).
 % yes
 testGetCoordPossibleMovesNotPlayerToMove :-
 		newGame(tawlbwrdd, G),
-		getCoordPossibleMoves(G, coord(4,6), []).
+		getCoordPossibleMoves(G, p(4,6), []).
 % yes
 testGetCoordPossibleMovesBlockedPiece :-
 		newGame(hnefatafl, G),
-		getCoordPossibleMoves(G, coord(6,11), []).
+		getCoordPossibleMoves(G, p(6,11), []).
 
 % yes
 testGetCoordPossibleMovesKingSpecialCells :-
 		newGame(brandubh, (V, _, _, B)),
 		setEmptyBoard(B, NB),
-		setCell(NB, cell(coord(1,4),wk), NB1),
-		getCoordPossibleMoves((V, w, n, NB1), coord(1,4),
-		[coord(1,5),coord(1,6),coord(1,7),coord(2,4),coord(3,4),coord(4,4),coord(5,4),
-		coord(6,4),coord(7,4),coord(1,3),coord(1,2),coord(1,1)]).
+		setCell(NB, c(p(1,4),k), NB1),
+		getCoordPossibleMoves((V, w, n, NB1), p(1,4),
+		[p(1,5),p(1,6),p(1,7),p(2,4),p(3,4),p(4,4),p(5,4),
+		p(6,4),p(7,4),p(1,3),p(1,2),p(1,1)]).
 setEmptyBoard([], []).
 setEmptyBoard([R|Rs], [NR|O]) :- setEmptyRow(R,NR), setEmptyBoard(Rs,O).
 setEmptyRow([], []).
-setEmptyRow([cell(C,_)|T],[cell(C,e)|T1]) :- setEmptyRow(T, T1).
+setEmptyRow([c(C,_)|T],[c(C,e)|T1]) :- setEmptyRow(T, T1).
 
 % yes
 testFindAnyMove :- newGame(tablut, G), gameBoard(G, B), findAnyMove(G, B).
@@ -876,219 +870,233 @@ allTestsPossibleMoves :-
 % yes.
 testHorizCapture :-
 		newGame(tablut, G),
-		makeMove(G, coord(9,6), coord(6,6), _, G1),
+		makeMove(G, p(9,6), p(6,6), _, G1),
 		% one capture NC / 1
-		makeMove(G1, coord(5,7), coord(6,7), 1, G2),
+		makeMove(G1, p(5,7), p(6,7), 1, G2),
 		gameBoard(G2, B),
 		% captured cell set empty
-		getCell(B, coord(6,6), cell(coord(6,6),e)).
+		getCell(B, p(6,6), c(p(6,6),e)).
 
 % yes.
 testVertCapture :-
 		newGame(tawlbwrdd, G),
-		makeLegitMove(G, coord(5,10), coord(5,8), _, G1),
+		makeLegitMove(G, p(5,10), p(5,8), _, G1),
 		% one capture NC / 1
-		makeLegitMove(G1, coord(4,6), coord(4,8), 1, G2),
+		makeLegitMove(G1, p(4,6), p(4,8), 1, G2),
 		gameBoard(G2, B),
 		% captured cell set empty
-		getCell(B, coord(5,8), cell(coord(5,8),e)).
+		getCell(B, p(5,8), c(p(5,8),e)).
 
 % yes.
 testDoubleCapture :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(4, 4), _, G1),
-		makeMove(G1, coord(4, 6), coord(4, 5), _, G2),
-		makeMove(G2, coord(1, 5), coord(3, 5), _, G3),
-		makeMove(G3, coord(5, 5), coord(5, 4), _, G4),
-		makeMove(G4, coord(5, 1), coord(5, 3), _, G5),
+		makeMove(G, p(1, 4), p(4, 4), _, G1),
+		makeMove(G1, p(4, 6), p(4, 5), _, G2),
+		makeMove(G2, p(1, 5), p(3, 5), _, G3),
+		makeMove(G3, p(5, 5), p(5, 4), _, G4),
+		makeMove(G4, p(5, 1), p(5, 3), _, G5),
 		% two captures NC / 2
-		makeMove(G5, coord(5, 11), coord(5, 5), 2, O),
+		makeMove(G5, p(5, 11), p(5, 5), 2, O),
 		gameBoard(O, B),
 		% captured cells set empty
-		getCell(B, coord(4, 5), cell(coord(4,5),e)),
-		getCell(B, coord(5, 4), cell(coord(5,4),e)), !.
+		getCell(B, p(4, 5), c(p(4,5),e)),
+		getCell(B, p(5, 4), c(p(5,4),e)), !.
 
 % yes.
 testTripleCapture :-
 		newGame(tawlbwrdd, G),
-		makeMove(G, coord(1, 5), coord(4, 4), _, G1),
-		makeMove(G1, coord(1, 6), coord(4, 8), _, G2),
-		makeMove(G2, coord(4, 6), coord(4, 5), _, G3),
-		makeMove(G3, coord(6, 6), coord(1, 2), _, G4),
-		makeMove(G4, coord(5, 7), coord(4, 7), _, G5),
-		makeMove(G5, coord(11, 5), coord(11, 4), _, G6),
+		makeMove(G, p(1, 5), p(4, 4), _, G1),
+		makeMove(G1, p(1, 6), p(4, 8), _, G2),
+		makeMove(G2, p(4, 6), p(4, 5), _, G3),
+		makeMove(G3, p(6, 6), p(1, 2), _, G4),
+		makeMove(G4, p(5, 7), p(4, 7), _, G5),
+		makeMove(G5, p(11, 5), p(11, 4), _, G6),
 		% three captures NC / 3
-		makeMove(G6, coord(3, 6), coord(4, 6), 3, O),
+		makeMove(G6, p(3, 6), p(4, 6), 3, O),
 		gameBoard(O, B),
 		% captured cells set empty
-		getCellList(B, [coord(4,5),coord(4,7),coord(5,6)],
-				[cell(coord(4,5),e),cell(coord(4,7),e),cell(coord(5,6),e)]), !.
+		getCellList(B, [p(4,5),p(4,7),p(5,6)],
+				[c(p(4,5),e),c(p(4,7),e),c(p(5,6),e)]), !.
 
 % yes
 testWhiteWin :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(1, 3), _, G1),
-		makeMove(G1, coord(6, 6), coord(1, 1), _, O),
+		makeMove(G, p(1, 4), p(1, 3), _, G1),
+		makeMove(G1, p(6, 6), p(1, 1), _, O),
 		gameWinner(O, w).
 
 % yes
 testWhiteWin1 :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(1, 3), _, G1),
-		makeMove(G1, coord(6, 6), coord(1, 11), _, O),
+		makeMove(G, p(1, 4), p(1, 3), _, G1),
+		makeMove(G1, p(6, 6), p(1, 11), _, O),
 		gameWinner(O, w).
 
 % yes
 testBoard11KingCaptured3SidesAndThrone :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(5, 5), _, G1),
-		makeMove(G1, coord(6, 6), coord(6, 5), _, G2),
-		makeMove(G2, coord(1, 5), coord(6, 4), _, G3),
-		makeMove(G3, coord(4, 6), coord(4, 2), _, G4),
-		makeMove(G4, coord(1, 6), coord(7, 5), _, O),
+		makeMove(G, p(1, 4), p(5, 5), _, G1),
+		makeMove(G1, p(6, 6), p(6, 5), _, G2),
+		makeMove(G2, p(1, 5), p(6, 4), _, G3),
+		makeMove(G3, p(4, 6), p(4, 2), _, G4),
+		makeMove(G4, p(1, 6), p(7, 5), _, O),
 		gameWinner(O, b).
 
 % yes
 testBoard11KingNotCaptured3Sides :-
 		newGame(tawlbwrdd, G),
-		makeMove(G, coord(1, 5), coord(2, 3), _, G1),
-		makeMove(G1, coord(6, 6), coord(3, 3), _, G2),
-		makeMove(G2, coord(1, 6), coord(3, 2), _, G3),
-		makeMove(G3, coord(4, 6), coord(4, 11), _, G4),
-		makeMove(G4, coord(1, 7), coord(4, 3), _, O),
+		makeMove(G, p(1, 5), p(2, 3), _, G1),
+		makeMove(G1, p(6, 6), p(3, 3), _, G2),
+		makeMove(G2, p(1, 6), p(3, 2), _, G3),
+		makeMove(G3, p(4, 6), p(4, 11), _, G4),
+		makeMove(G4, p(1, 7), p(4, 3), _, O),
 		gameWinner(O, n).
 
 % yes
 testBoard11KingNotCapturedOnEdge :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(10, 6), coord(10, 11), _, G1),
-		makeMove(G1, coord(6, 6), coord(9, 11), _, G2),
-		makeMove(G2, coord(6, 10), coord(9, 10), _, O),
+		makeMove(G, p(10, 6), p(10, 11), _, G1),
+		makeMove(G1, p(6, 6), p(9, 11), _, G2),
+		makeMove(G2, p(6, 10), p(9, 10), _, O),
 		gameWinner(O, n).
 
 % yes
 testBoard11KingOnThroneCapture :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(5, 6), NC1, G1),
-		makeMove(G1, coord(1, 5), coord(6, 5), NC2, G2),
-		makeMove(G2, coord(1, 6), coord(6, 7), NC3, G3),
-		makeMove(G3, coord(4, 6), coord(4, 2), NC4, G4),
-		makeMove(G4, coord(1, 7), coord(7, 6), NC5, O),
+		makeMove(G, p(1, 4), p(5, 6), NC1, G1),
+		makeMove(G1, p(1, 5), p(6, 5), NC2, G2),
+		makeMove(G2, p(1, 6), p(6, 7), NC3, G3),
+		makeMove(G3, p(4, 6), p(4, 2), NC4, G4),
+		makeMove(G4, p(1, 7), p(7, 6), NC5, O),
 		gameWinner(O, b).
 
 % yes
 testBoard11KingFarFromThroneCapture :-
 		newGame(hnefatafl, G),
-		makeMove(G, coord(1, 4), coord(3, 3), NC1, G1),
-		makeMove(G1, coord(1, 5), coord(4, 2), NC2, G2),
-		makeMove(G2, coord(1, 6), coord(4, 4), NC3, G3),
-	  makeMove(G3, coord(6, 6), coord(4, 3), NC4, G4),
-		makeMove(G4, coord(1, 7), coord(5, 3), NC5, O),
+		makeMove(G, p(1, 4), p(3, 3), NC1, G1),
+		makeMove(G1, p(1, 5), p(4, 2), NC2, G2),
+		makeMove(G2, p(1, 6), p(4, 4), NC3, G3),
+	  makeMove(G3, p(6, 6), p(4, 3), NC4, G4),
+		makeMove(G4, p(1, 7), p(5, 3), NC5, O),
 		gameWinner(O, b).
 
 % yes
 testBoard9KingOnThroneCapture4Sides :-
 		newGame(tablut, G),
-		makeMove(G, coord(2, 5), coord(6, 5), _, G1),
-		makeMove(G1, coord(1, 4), coord(4, 5), _, G2),
-		makeMove(G2, coord(1, 6), coord(5, 6), _, G3),
-		makeMove(G3, coord(3, 5), coord(3, 4), _, G4),
-		makeMove(G4, coord(1, 5), coord(5, 4), _, O),
+		makeMove(G, p(2, 5), p(6, 5), _, G1),
+		makeMove(G1, p(1, 4), p(4, 5), _, G2),
+		makeMove(G2, p(1, 6), p(5, 6), _, G3),
+		makeMove(G3, p(3, 5), p(3, 4), _, G4),
+		makeMove(G4, p(1, 5), p(5, 4), _, O),
 		gameWinner(O, b).
 
 % yes
 testBoard7KingOnThroneNoCapture3Sides :-
 		newGame(brandubh, G),
-		makeMove(G, coord(1, 4), coord(3, 4), _, G1),
-		makeMove(G1, coord(2, 4), coord(4, 3), _, G2),
-		makeMove(G2, coord(4, 1), coord(4, 5), _, O),
+		makeMove(G, p(1, 4), p(3, 4), _, G1),
+		makeMove(G1, p(2, 4), p(4, 3), _, G2),
+		makeMove(G2, p(4, 1), p(4, 5), _, O),
 		gameWinner(O, n).
 
 % yes
 testBoard9KingFarFromThroneVertCapture :-
 		newGame(tablut, G),
-		makeMove(G, coord(1, 4), coord(1, 3), _, G1),
-		makeMove(G1, coord(5, 5), coord(2, 3), _, G2),
-		makeMove(G2, coord(1, 5), coord(3, 3), _, O),
+		makeMove(G, p(1, 4), p(1, 3), _, G1),
+		makeMove(G1, p(5, 5), p(2, 3), _, G2),
+		makeMove(G2, p(1, 5), p(3, 3), _, O),
 		gameWinner(O, b).
 
 % yes
 testBoard9KingFarFromThroneHorizCapture :-
 		newGame(tablut, G),
-		makeMove(G, coord(6, 9), coord(8, 9), _, G1),
-		makeMove(G1, coord(5, 5), coord(8, 8), _, G2),
-		makeMove(G2, coord(8, 5), coord(8, 7), _, O),
+		makeMove(G, p(6, 9), p(8, 9), _, G1),
+		makeMove(G1, p(5, 5), p(8, 8), _, G2),
+		makeMove(G2, p(8, 5), p(8, 7), _, O),
 		gameWinner(O, b).
 
 % yes
 testBoard9SneakyKingNotCaptured :-
 		newGame(tablut, G),
-		makeMove(G, coord(6, 9), coord(7, 9), _, G1),
-		makeMove(G1, coord(5, 5), coord(6, 9), _, G2),
-		makeMove(G2, coord(5, 8), coord(6, 8), _, O),
+		makeMove(G, p(6, 9), p(7, 9), _, G1),
+		makeMove(G1, p(5, 5), p(6, 9), _, G2),
+		makeMove(G2, p(5, 8), p(6, 8), _, O),
 		gameWinner(O, n).
 
 % yes
 testBoard11SneakyKingNotCaptured :-
 		newGame(tawlbwrdd, G),
-		makeMove(G, coord(6, 9), coord(7, 9), _, G1),
-		makeMove(G1, coord(6, 6), coord(6, 10), _, G2),
-		makeMove(G2, coord(7, 9), coord(8, 9), _, O),
+		makeMove(G, p(6, 9), p(7, 9), _, G1),
+		makeMove(G1, p(6, 6), p(6, 10), _, G2),
+		makeMove(G2, p(7, 9), p(8, 9), _, O),
 		gameWinner(O, n).
 
 % yes
 testBoard7KingNextToThroneCaptured3Sides :-
 		newGame(brandubh, G),
-		makeMove(G, coord(1, 4), coord(3, 3), _, G1),
-		makeMove(G1, coord(4, 4), coord(4, 3), _, G2),
-		makeMove(G2, coord(2, 4), coord(5, 3), _, O),
+		makeMove(G, p(1, 4), p(3, 3), _, G1),
+		makeMove(G1, p(4, 4), p(4, 3), _, G2),
+		makeMove(G2, p(2, 4), p(5, 3), _, O),
 		gameWinner(O, b).
+
+% yes
+testBoard7KingNextToThroneNotCaptured2Sides :-
+		newGame(brandubh, G),
+		makeMove(G, p(4, 6), p(1, 6), _, G1),
+		makeMove(G1, p(4, 5), p(7, 5), _, G2),
+		makeMove(G2, p(6, 4), p(6, 5), _, G3),
+		makeMove(G3, p(4, 4), p(4, 5), _, G4),
+		makeMove(G4, p(2, 4), p(2, 5), _, G5),
+		makeMove(G5, p(7, 5), p(7, 6), _, G6),
+		makeMove(G6, p(2, 5), p(3, 5), _, G7),
+		makeMove(G7, p(7, 6), p(7, 5), _, G8),
+		makeMove(G8, p(6, 5), p(5, 5), _, G9),
+		gameWinner(G9, n).
 
 % yes
 testBoard7Draw :-
 		newGame(brandubh, G),
-		makeMove(G, coord(4, 6), coord(1, 6), _, G1),
-		makeMove(G1, coord(3, 4), coord(3, 7), _, G2),
-		makeMove(G2, coord(2, 4), coord(2, 7), _, G3),
-		makeMove(G3, coord(5, 4), coord(5, 7), _, G4),
-		makeMove(G4, coord(6, 4), coord(6, 7), _, G5),
-		makeMove(G5, coord(4, 3), coord(1, 3), _, G6),
-		makeMove(G6, coord(4, 2), coord(1, 2), _, G7),
-		makeMove(G7, coord(4, 5), coord(7, 5), _, G8),
-		makeMove(G8, coord(1, 6), coord(7, 6), _, G9),
-		makeMove(G9, coord(4, 4), coord(4, 6), _, G10),
-		makeMove(G10, coord(4, 7), coord(3, 7), _, G11),
-		makeMove(G11, coord(4, 6), coord(4, 7), _, G12),
-		makeMove(G12, coord(7, 6), coord(5, 6), _, G13),
-		makeMove(G13, coord(4, 7), coord(4, 6), _, G14),
-		makeMove(G14, coord(6, 7), coord(5, 7), _, G15),
-		makeMove(G15, coord(4, 6), coord(4, 7), _, G16),
-		makeMove(G16, coord(5, 6), coord(4, 6), _, O),
+		makeMove(G, p(4, 6), p(1, 6), _, G1),
+		makeMove(G1, p(3, 4), p(3, 7), _, G2),
+		makeMove(G2, p(2, 4), p(2, 7), _, G3),
+		makeMove(G3, p(5, 4), p(5, 7), _, G4),
+		makeMove(G4, p(6, 4), p(6, 7), _, G5),
+		makeMove(G5, p(4, 3), p(1, 3), _, G6),
+		makeMove(G6, p(4, 2), p(1, 2), _, G7),
+		makeMove(G7, p(4, 5), p(7, 5), _, G8),
+		makeMove(G8, p(1, 6), p(7, 6), _, G9),
+		makeMove(G9, p(4, 4), p(4, 6), _, G10),
+		makeMove(G10, p(4, 7), p(3, 7), _, G11),
+		makeMove(G11, p(4, 6), p(4, 7), _, G12),
+		makeMove(G12, p(7, 6), p(5, 6), _, G13),
+		makeMove(G13, p(4, 7), p(4, 6), _, G14),
+		makeMove(G14, p(6, 7), p(5, 7), _, G15),
+		makeMove(G15, p(4, 6), p(4, 7), _, G16),
+		makeMove(G16, p(5, 6), p(4, 6), _, O),
 		gameWinner(O, d).
 
 % no
-testIllegalMoveWrongTurnTeleport :- newGame(hnefatafl, G), makeLegitMove(G, coord(6, 6), coord(1, 1), _, O).
+testIllegalMoveWrongTurnTeleport :- newGame(hnefatafl, G), makeLegitMove(G, p(6, 6), p(1, 1), _, O).
 
 % no
-testIllegalMoveFromEmptyCell :- newGame(hnefatafl, G), makeLegitMove(G, coord(1, 2), coord(11, 1), _, O).
+testIllegalMoveFromEmptyCell :- newGame(hnefatafl, G), makeLegitMove(G, p(1, 2), p(11, 1), _, O).
 
 % no
-testIllegalMoveToSpecialCell :- newGame(hnefatafl, G), makeLegitMove(G, coord(1, 4), coord(1, 1), _, O).
+testIllegalMoveToSpecialCell :- newGame(hnefatafl, G), makeLegitMove(G, p(1, 4), p(1, 1), _, O).
 
 % no
-testIllegalMoveOnOccupiedCell :- newGame(hnefatafl, G), makeLegitMove(G, coord(1, 4), coord(1, 5), NC, O).
+testIllegalMoveOnOccupiedCell :- newGame(hnefatafl, G), makeLegitMove(G, p(1, 4), p(1, 5), NC, O).
 
 % no
-testIllegalMoveNotOrthogonal :- newGame(hnefatafl, G), makeLegitMove(G, coord(1, 4), coord(2, 3), NC, O).
+testIllegalMoveNotOrthogonal :- newGame(hnefatafl, G), makeLegitMove(G, p(1, 4), p(2, 3), NC, O).
 
 % yes
-testLegalMove:- newGame(hnefatafl, G), makeLegitMove(G, coord(1, 4), coord(1, 3), NC, O).
+testLegalMove:- newGame(hnefatafl, G), makeLegitMove(G, p(1, 4), p(1, 3), NC, O).
 
 % no
-testIllegalMoveWrongTurnOrthogonal :- newGame(hnefatafl, G), makeLegitMove(G, coord(4, 6), coord(4, 5), NC, O).
+testIllegalMoveWrongTurnOrthogonal :- newGame(hnefatafl, G), makeLegitMove(G, p(4, 6), p(4, 5), NC, O).
 
 % no
-testIllegalMoveOnSameCoord :- newGame(hnefatafl, G), makeLegitMove(G, coord(1,4), coord(1,4), _, G1).
+testIllegalMoveOnSameCoord :- newGame(hnefatafl, G), makeLegitMove(G, p(1,4), p(1,4), _, G1).
 
 % yes
 allTestsCaptures :- testHorizCapture, testVertCapture, testDoubleCapture, testTripleCapture.
@@ -1137,3 +1145,4 @@ allTests :-
 		allTestsCaptures,
 		allTestsScenarios,
 		allTestsLegalMoves.
+		

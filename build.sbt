@@ -1,6 +1,6 @@
 name := "PPS_VikingChess"
 
-version := "0.3"
+version := "0.6"
 
 scalaVersion := "2.12.5"
 
@@ -15,11 +15,10 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.0.5" % "test",
       "org.scalacheck" %% "scalacheck" % "1.14.0" % Test,
       "it.unibo.alice.tuprolog" % "tuprolog" % "3.1" ,
-      "com.typesafe.akka" %% "akka-actor" % "2.6.6",
-      "org.scala-lang.modules" %% "scala-async" % "0.10.0"
+      "com.typesafe.akka" %% "akka-actor" % "2.6.6"
     ),
     mainClass := Some("HnefataflApp"),
-    assemblyJarName in assembly := "Hnefatafl_VikingChess_0.3.jar",
+    assemblyJarName in assembly := "Hnefatafl_VikingChess_0.6.jar",
     crossPaths := false,
     Test / parallelExecution := false,
     test in assembly := {}

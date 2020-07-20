@@ -4,11 +4,6 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-/**
-  *   @author Luca Nannini
-  *   @author Giovanni Maria Speciale
-  */
-
 @RunWith(classOf[JUnitRunner])
 class PossibleMovesTests extends FunSuite {
   val prolog: Prolog = new Prolog()
