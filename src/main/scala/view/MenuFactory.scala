@@ -1,6 +1,6 @@
 package view
 
-import java.awt.{GridBagConstraints, _}
+import java.awt._
 import java.awt.event.{MouseAdapter, MouseEvent}
 import java.awt.image.BufferedImage
 import java.io.File
@@ -119,19 +119,19 @@ object MenuFactory extends MenuFactory {
 
   private var cellDimension = 0
   private val smallerSide: Int = ScreenSize.getSmallerSide * 9 / 10
-  private val f: Font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/NorseBold-2Kge.otf"))
+  private val f: Font = ResourceLoader.loadFont("/font/NorseBold-2Kge.otf")
   private val ge: GraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment
   ge.registerFont(f)
-  private val boardHnefataflIconPath: String =  "src/main/resources/images/iconBoardHnefatafl.png"
-  private val boardTawlbwrddIconPath: String =  "src/main/resources/images/iconBoardTawlbwrdd.png"
-  private val boardTablutIconPath: String =  "src/main/resources/images/iconBoardTablut.png"
-  private val boardBrandubhlIconPath: String =  "src/main/resources/images/iconBoardBrandubh.png"
-  private val newcomerIconPath: String =  "src/main/resources/images/iconNewcomer.png"
-  private val amateurIconPath: String =  "src/main/resources/images/iconAmateur.png"
-  private val standardIconPath: String =  "src/main/resources/images/iconStandard.png"
-  private val advancedIconPath: String =  "src/main/resources/images/iconAdvanced.png"
-  private val whitePlayerIconPath: String =  "src/main/resources/images/iconWhitePlayer.jpeg"
-  private val blackPlayerIconPath: String =  "src/main/resources/images/iconBlackPlayer.jpeg"
+  private val boardHnefataflIconPath: String =  "/images/iconBoardHnefatafl.png"
+  private val boardTawlbwrddIconPath: String =  "/images/iconBoardTawlbwrdd.png"
+  private val boardTablutIconPath: String =  "/images/iconBoardTablut.png"
+  private val boardBrandubhlIconPath: String =  "/images/iconBoardBrandubh.png"
+  private val newcomerIconPath: String =  "/images/iconNewcomer.png"
+  private val amateurIconPath: String =  "/images/iconAmateur.png"
+  private val standardIconPath: String =  "/images/iconStandard.png"
+  private val advancedIconPath: String =  "/images/iconAdvanced.png"
+  private val whitePlayerIconPath: String =  "/images/iconWhitePlayer.jpeg"
+  private val blackPlayerIconPath: String =  "/images/iconBlackPlayer.jpeg"
   private val HEIGHT_COMPONENT_MENU_DIMENSION: Int = smallerSide * 8 / 100
 
   override def createMenuPanel(string: String): JPanel = new MenuPanel(string)
@@ -178,11 +178,11 @@ object MenuFactory extends MenuFactory {
 
     private val chooseLabel = new JLabel()
 
-    private val image = ImageIO.read(new File("src/main/resources/images/Cornice.png"))
+    private val image = ResourceLoader.loadImage("/images/Cornice.png")
 
     private val imageScaled = image.getScaledInstance(smallerSide, smallerSide * 98 / 100, Image.SCALE_DEFAULT)
 
-    private val img = new ImageIcon("src/main/resources/images/logo.png")
+    private val img = new ImageIcon(ResourceLoader.loadImage("/images/logo.png"))
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
     menuLabel.setPreferredSize(new Dimension(smallerSide, smallerSide * 25 / 100))
@@ -249,7 +249,7 @@ object MenuFactory extends MenuFactory {
     private val ICON_DIMENSION: Int = smallerSide * 5 / 100
     this.setPreferredSize(new Dimension(ICON_DIMENSION, ICON_DIMENSION))
     this.setMaximumSize(getPreferredSize)
-    val img: BufferedImage = ImageIO.read(new File(pathIcon))
+    val img: BufferedImage = ResourceLoader.loadImage(pathIcon)
     val dimg: Image = img.getScaledInstance(ICON_DIMENSION, ICON_DIMENSION, Image.SCALE_SMOOTH)
     val imageIcon = new ImageIcon(dimg)
     this.setIcon(imageIcon)

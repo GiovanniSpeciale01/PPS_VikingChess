@@ -1,8 +1,7 @@
 package model
 
-import java.io.FileInputStream
-
 import alice.tuprolog.{Prolog, SolveInfo, Struct, Term, Theory}
+import model.GameRules
 import utils.BoardGame.Board.BoardImpl
 import utils.BoardGame.{Board, BoardCell}
 import utils.{Coordinate, Move}
@@ -165,7 +164,7 @@ case class ParserPrologImpl(theory: String) extends ParserProlog {
 
   def getVariant: Term = variant
 
-  engine.setTheory(new Theory(new FileInputStream(theory)))
+  engine.setTheory(new Theory(GameRules.theory()))
 
   override def getActualBoard: Board = {
     goalString = replaceBoardString(board)

@@ -205,6 +205,7 @@ object Menu {
       standard.addActionListener(chooseLevelIAListener("Standard"))
       GameFactory.incrementXConstraints(limits)
       panelLevelStandard.add(standard, limits)
+      standard.setEnabled(false)
 
       labelAdvanced = MenuFactory.createLabelAdvanced
       GameFactory.resetXConstraints(limits)
@@ -213,6 +214,7 @@ object Menu {
       advanced.addActionListener(chooseLevelIAListener("Advanced"))
       GameFactory.incrementXConstraints(limits)
       panelLevelAdvanced.add(advanced, limits)
+      advanced.setEnabled(false)
 
       returnToMenu = MenuFactory.createMainButton("Previous Menu")
       returnToMenu.addActionListener((_: ActionEvent) => view.switchOverlay(diffPanel, variantsPanel))

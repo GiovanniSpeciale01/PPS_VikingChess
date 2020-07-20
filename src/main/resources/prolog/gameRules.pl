@@ -1,7 +1,3 @@
-teamPPS(["John Mary Special", "Easter Lio", "Mark Cells", "Luke Hnnys"]).
-hnefataflAppOfferedBy(P) :- teamPPS(Team), member(P, Team).
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  							   Variants			               			  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

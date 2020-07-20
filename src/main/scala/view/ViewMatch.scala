@@ -135,9 +135,6 @@ object ViewMatch {
       updateSnapshot(gameSnapshot)
 
       //makeMoveIA(gameSnapshot)
-
-      /* TODO NON FUNZIONA */
-      //ViewFactory.generateASoundForMove()
     }
 
     override def updateSnapshot(gameSnapshot: GameSnapshot): Unit = {

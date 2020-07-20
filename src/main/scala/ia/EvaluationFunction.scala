@@ -14,7 +14,6 @@ object EvaluationFunction {
   private var kingCoord: Coordinate = _
   private var cornerCoordinates: List[Coordinate] = _
   private var centralCoordinate: Coordinate = _
-  private var quadrants: Seq[Seq[Seq[BoardCell]]]= _
   private var kingOrthogonalCells: Map[OrthogonalDirection, List[BoardCell]] = _
   private var kingAdjacentCells: Map[OrthogonalDirection, Option[BoardCell]] = _
   private var blackCoords: Seq[Coordinate] = _
@@ -53,20 +52,16 @@ object EvaluationFunction {
     var score: Int = 0
     if(kingAdjacentToCorner()) {
       score += ScoreProvider.KingNearCornerScore
-      println("PossibleKingAdjacentToCorner")
     }
     else
       if(kingToCornerInOne()){
         score += ScoreProvider.KingToCornerScore
-        println("PossibleKingToCornerInOne")
     }
       if(kingCapturedInOne(gameSnapshot)) {
         score -= ScoreProvider.KingCatchableInOne
-        println("PossibleKingCaptureInOne")
       }
       if(score == 0) {
         val scoreRowOrColumnFree = scoreOwnerFirstLastThreeRowsOrColumns()
-        println("RowsColumnsOwned(Whites,Blacks): " + scoreRowOrColumnFree)
         score -= computeBlackBetterPositions(gameSnapshot) + scoreRowOrColumnFree._2
         score += computeWhiteBetterPositions(gameSnapshot) + scoreRowOrColumnFree._1
     }
@@ -155,14 +150,6 @@ object EvaluationFunction {
 
 
   def computeWhiteBetterPositions(gameSnapshot: GameSnapshot): Int = {
-
-    println("***********")
-    println("White King In Throne: " + scoreKingOnThrone(gameSnapshot))
-    println("White Tower: " + scoreTower(gameSnapshot))
-    println("King in Free Row or Column: " + scoreKingIsInFreeRowOrColumn())
-    println("White Captured Black: " + scoreCapturedBlack(gameSnapshot))
-    println("***********")
-
     scoreKingOnThrone(gameSnapshot) +
     scoreTower(gameSnapshot) +
     scoreKingIsInFreeRowOrColumn() +
@@ -171,15 +158,8 @@ object EvaluationFunction {
 
   def computeBlackBetterPositions(gameSnapshot: GameSnapshot): Int = {
 
-    println("***********")
-    println("Black Surround The King: " + scoreBlackSurroundTheKing())
-    println("Black Captured White: " + scoreCapturedWhite(gameSnapshot))
-    println("Black Cordon: " + scoreBlackCordon(gameSnapshot.getBoard))
-    println("***********")
-
     scoreBlackSurroundTheKing() +
     scoreCapturedWhite(gameSnapshot) +
-    //TODO review Cordon-Barricade Functionality and Score
     + scoreBlackCordon(board)
 
   }
@@ -205,29 +185,6 @@ object EvaluationFunction {
 
     _scoreKingIsInFreeRowOrColumn()
   }
-
-  // Positive score if king moves to a free corner.
-  // The score is inversely proportional to the concentration of black pawns in the king's quadrant.
-  /*
-  def scoreKingMovesToAFreeCorner(): Int = {
-    val quadranKing = findQuadrant(kingCoord)
-    val numberBlackPieceInKingQuadrant = quadranKing.flatten.count(cell => cell.getPiece.equals(Piece.BlackPawn))
-    val score: Double = numberBlackPieceInKingQuadrant match {
-      case 0 => 0
-      case _ => 100 * 1 / numberBlackPieceInKingQuadrant
-    }
-    score.toInt
-  }
-  */
-/*
-  // Positive score if the white opening in opposite side of black Blockade
-  def scoreWhiteOpeningOnOppositeSideOfBlackBlockade(whiteCoord: Coordinate): Int = {
-    val oppositeQuadrant: Seq[Seq[BoardCell]] = findQuadrant(whiteCoord: Coordinate, oppositQuadrant = true)
-    val numberBlackPieceInOppositeKingQuadrant: Int = oppositeQuadrant.flatten.count(cell => cell.getPiece.equals(Piece.BlackPawn))
-    val score: Int = numberBlackPieceInOppositeKingQuadrant * 2
-    score
-  }
-*/
 
   /**
   * Black score
@@ -274,15 +231,6 @@ object EvaluationFunction {
     }
 
     var endingCordonCoords: ListBuffer[Coordinate] = ListBuffer.empty
-    /*
-    def countPawnInCordon(previousCoord:List[Coordinate], nearPawnsCoords:List[Coordinate], otherSideCoord: List[Coordinate], startSideCoord: Coordinate, count:Int ):Int = nearPawnsCoords match {
-      case Nil =>  count
-      case h::_ if isOnAnySides(h, otherSideCoord) => endingCordonCoords += h ;  count + 1
-      case h::t if previousCoord.contains(h) || isOnSide(h, startSideCoord ) || endingCordonCoords.contains(h) => endingCordonCoords += h
-        countPawnInCordon(previousCoord, t, otherSideCoord,startSideCoord, count)
-      case h::t => countPawnInCordon( previousCoord, t, otherSideCoord,startSideCoord, count + countPawnInCordon(previousCoord :+ h, findNearBlack(h), otherSideCoord, startSideCoord, count ))
-    }
-    */
 
     def countPawnInCordon2( nearPawnsCoords: List[Coordinate], startCoord: Coordinate, otherSideCoord: List[Coordinate], step: Int, count:Int ): Int = nearPawnsCoords match {
       case Nil => count
@@ -341,38 +289,6 @@ object EvaluationFunction {
 
   private def samePlayerPawns(l: Seq[BoardCell], p: Piece.Val): Boolean =
     l.nonEmpty && l.size.equals(l.count(_.getPiece.equals(p)))
-/*
-  def findQuadrant(coord: Coordinate, oppositQuadrant: Boolean = false): Seq[Seq[BoardCell]] = {
-
-    def getQuadrant(coord: Coordinate): Int = {
-      if (isInRange(coord, (1, boardSize / 2), (1, boardSize / 2))) 0
-      else if (isInRange(coord, (boardSize / 2 + 1, boardSize), (1, boardSize / 2))) 1
-      else if (isInRange(coord, (boardSize / 2 + 1, boardSize), (1, boardSize / 2))) 2
-      else 3
-    }
-
-    def opposite(indexQuadrant: Int): Int = indexQuadrant match {
-      case 0 => 3
-      case 3 => 0
-      case 1 => 2
-      case _ => 1
-    }
-
-    def _findQuadrant(index: Int, quadrants: Seq[Seq[Seq[BoardCell]]], oppositQuadrant: Boolean): Seq[Seq[BoardCell]] =
-      if (oppositQuadrant)
-        quadrants(opposite(index))
-      else
-        quadrants(index)
-
-    _findQuadrant(getQuadrant(coord), quadrants, oppositQuadrant)
-  }
-
-
-  def isInRange(coordinate: Coordinate, rangeX: (Int, Int), rangeY: (Int, Int)): Boolean = coordinate match {
-    case Coordinate(x, y) if x >= rangeX._1 && x <= rangeX._2 && y >= rangeY._1 && y <= rangeY._2 => true
-    case _ => false
-  }
-*/
 
   def isItDistantFromCornerOf(coord: Coordinate, distance: Int): Boolean = {
 
@@ -385,14 +301,7 @@ object EvaluationFunction {
 
     _isItDistantFromTheCornerOf(coord, distance, cornerCoordinates)
   }
-/*
-  def transposeCoordinates(coord: Coordinate): Coordinate = coord match {
-    case Coordinate(x, y) => Coordinate(y, x)
-  }
 
-  def withoutKing(seq: Seq[BoardCell]): Seq[BoardCell] = seq.filter(cell => !cell.getPiece.equals(Piece.WhiteKing))
-*/
-  //Quadratic distance
   def quadraticDistanceBetweenCells(start: Coordinate, end: Coordinate): Int = (scala.math.pow(start.x - end.x, 2) + scala.math.pow(start.y - end.y, 2)).toInt
 
   def findCloserCorner(coord: Coordinate): Coordinate = {
@@ -407,38 +316,6 @@ object EvaluationFunction {
     _getCloserCorner(Coordinate(1,1), Int.MaxValue)
   }
 
-  /*
-  // Split a rows sequence in dials sequence
-  def splitMatrixInFourPart(seqRows: Seq[Seq[BoardCell]]): Seq[Seq[Seq[BoardCell]]] = {
-    val sizeSplit: Int = boardSize / 2
-    val northAndSouth = seqRows.toList.splitAt(sizeSplit)
-
-    def splitList(seq: Seq[Seq[BoardCell]], westSeq: Seq[Seq[BoardCell]], estSeq: Seq[Seq[BoardCell]]): Seq[Seq[Seq[BoardCell]]]= seq match {
-      case h :: t =>
-        val westAndEst = h.splitAt(sizeSplit)
-        splitList(t, westSeq :+ westAndEst._1, estSeq :+ westAndEst._2)
-
-      case _ => Seq(westSeq,estSeq)
-    }
-
-    val firstAndSecond = splitList(northAndSouth._1, Seq(), Seq())
-    val thirdAndQuart = splitList(northAndSouth._2, Seq(), Seq())
-
-    firstAndSecond ++ thirdAndQuart
-
-  }
-*/
   def isSequenceFreeCells(seq: Seq[BoardCell]): Boolean =
     seq.count(boardCell => !boardCell.getPiece.equals(Piece.Empty)) == 0
-
-
-}
-
-object blabla extends App{
-  val THEORY: String = TheoryGame.GameRules.toString
-  val game: ParserProlog = ParserPrologImpl(THEORY)
-  val initGame = game.createGame(GameVariant.Tawlbwrdd.nameVariant.toLowerCase)
-  val gameSnapshot = GameSnapshot(GameVariant.Tawlbwrdd, initGame._1, initGame._2, initGame._3, Option.empty, 0, 0)
-
-
 }

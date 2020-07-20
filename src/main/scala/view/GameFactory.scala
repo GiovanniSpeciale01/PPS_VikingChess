@@ -2,9 +2,6 @@ package view
 
 import java.awt._
 import java.awt.event.{MouseAdapter, MouseEvent}
-import java.io.File
-
-//import javafx.scene.media.{Media, MediaPlayer}
 
 import javax.swing._
 import javax.swing.border.LineBorder
@@ -228,23 +225,17 @@ trait GameFactory {
     * Increments a constraints for x weight parameter.
     */
   def incrementWeightXConstraints(limits: GridBagConstraints): Unit
-
-  /**
-    * Generates a sound for the moved piece.
-    */
-  //def generateASoundForMove()
 }
 
 object GameFactory extends GameFactory {
 
   private var cellDimension = 0
   private val smallerSide: Int = ScreenSize.getSmallerSide * 9 / 10
-  private val f: Font = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/font/NorseBold-2Kge.otf"))
+  private val f: Font = ResourceLoader.loadFont("/font/NorseBold-2Kge.otf")
   private val ge: GraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment
   ge.registerFont(f)
-  private val centerCellIconPath: String = "src/main/resources/images/iconThrone.png"
-  private val cornerCellIconPath: String =  "src/main/resources/images/iconCellWin.png"
-  //private val soundMovedPiece: String =  "src/main/resources/sounds/movedPiece.mp3"
+  private val centerCellIconPath: String = "/images/iconThrone.png"
+  private val cornerCellIconPath: String =  "/images/iconCellWin.png"
 
   override def getSmallerSide: Int = smallerSide
 
@@ -307,15 +298,6 @@ object GameFactory extends GameFactory {
   override def incrementXConstraints(limits: GridBagConstraints): Unit = limits.gridx += 1
 
   override def incrementWeightXConstraints(limits: GridBagConstraints): Unit = limits.weightx += 1
-
-  //override def generateASoundForMove(): Unit = playMoveSound()
-
-  /*
-  private def playMoveSound(): Unit = {
-    val mediaPlayer: MediaPlayer = new MediaPlayer(new Media(soundMovedPiece))
-    mediaPlayer.play()
-  }
-  */
 
   private class BasicCell(private var defaultBackground: Color) extends Cell {
     private var isAPossibleMove: Boolean = false
@@ -413,7 +395,7 @@ object GameFactory extends GameFactory {
   }
 
   private class IconCell(private var defaultColor: Color, private var iconPath: String) extends BasicCell(defaultColor) {
-    private var iconCell = new ImageIcon(iconPath)
+    private var iconCell = new ImageIcon(ResourceLoader.loadImage(iconPath))
     private var image = iconCell.getImage
 
     image = image.getScaledInstance(cellDimension * 70 / 100, cellDimension * 70 / 100, Image.SCALE_SMOOTH)
@@ -481,7 +463,7 @@ object GameFactory extends GameFactory {
   }
 
   private class GameButton() extends JButton {
-    private var imageIcon = new ImageIcon("src/main/resources/images/hamburgerMenu.png")
+    private var imageIcon = new ImageIcon(ResourceLoader.loadImage("/images/hamburgerMenu.png"))
     private var image = imageIcon.getImage
     image = image.getScaledInstance(smallerSide * 7 / 100, smallerSide * 7 / 100, Image.SCALE_SMOOTH)
     imageIcon = new ImageIcon(image)
@@ -495,7 +477,7 @@ object GameFactory extends GameFactory {
   }
 
   private class SnapshotButton(private val iconPath: String, private val hoverText: String) extends JButton {
-    private var imageIcon = new ImageIcon(iconPath)
+    private var imageIcon = new ImageIcon(ResourceLoader.loadImage(iconPath))
     private var image = imageIcon.getImage
     image = image.getScaledInstance(smallerSide * 5 / 100, smallerSide * 5 / 100, Image.SCALE_SMOOTH)
     imageIcon = new ImageIcon(image)
@@ -509,23 +491,23 @@ object GameFactory extends GameFactory {
     setContentAreaFilled(false)
   }
 
-  private val firstMoveButtonPath: String = "src/main/resources/images/iconFirstMove.png"
+  private val firstMoveButtonPath: String = "/images/iconFirstMove.png"
   private val firstMoveButtonHoverText: String = "Show First Move"
   private def firstMoveButton(): JButton = new SnapshotButton(firstMoveButtonPath, firstMoveButtonHoverText)
 
-  private val previousMoveButtonPath: String = "src/main/resources/images/iconPreviousMove.png"
+  private val previousMoveButtonPath: String = "/images/iconPreviousMove.png"
   private val previousMoveButtonHoverText: String = "Show Previous Move"
   private def previousMoveButton(): JButton = new SnapshotButton(previousMoveButtonPath, previousMoveButtonHoverText)
 
-  private val nextMoveButtonPath: String = "src/main/resources/images/iconNextMove.png"
+  private val nextMoveButtonPath: String = "/images/iconNextMove.png"
   private val nextMoveButtonHoverText: String = "Show Next Move"
   private def nextMoveButton(): JButton = new SnapshotButton(nextMoveButtonPath, nextMoveButtonHoverText)
 
-  private val lastMoveButtonPath: String = "src/main/resources/images/iconLastMove.png"
+  private val lastMoveButtonPath: String = "/images/iconLastMove.png"
   private val lastMoveButtonHoverText: String = "Show Last Move"
   private def lastMoveButton(): JButton = new SnapshotButton(lastMoveButtonPath, lastMoveButtonHoverText)
 
-  private val undoMoveButtonPath: String = "src/main/resources/images/iconUndoMove.png"
+  private val undoMoveButtonPath: String = "/images/iconUndoMove.png"
   private val undoMoveButtonHoverText: String = "Turn Back"
   private def undoMoveButton(): JButton = new SnapshotButton(undoMoveButtonPath, undoMoveButtonHoverText)
 
@@ -567,7 +549,7 @@ object GameFactory extends GameFactory {
 
   private class Frame extends JFrame {
     private val FRAME_TITLE = "Viking Chess - Hnefatafl"
-    private val iconApp = new ImageIcon("src/main/resources/images/iconApp.png")
+    private val iconApp = new ImageIcon(ResourceLoader.loadImage("/images/iconApp.png"))
 
     setTitle(FRAME_TITLE)
     setIconImage(iconApp.getImage)
