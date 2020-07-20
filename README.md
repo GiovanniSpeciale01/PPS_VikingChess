@@ -1,4 +1,4 @@
-# PPS_VikingChess 0.3
+# PPS_VikingChess 0.6
 Hnefatafl Game development with Scala-Java-Prolog integration.
 
 ****** NEW FOR VERSION 0.6 - COMMIT d055ed5 ******
