@@ -1,9 +1,8 @@
 package model
 
 import alice.tuprolog.{Prolog, SolveInfo, Struct, Term, Theory}
-import model.GameRules
 import utils.BoardGame.Board.BoardImpl
-import utils.BoardGame.{Board, BoardCell}
+import utils.BoardGame._
 import utils.{Coordinate, Move}
 
 import scala.collection.mutable.ListBuffer
