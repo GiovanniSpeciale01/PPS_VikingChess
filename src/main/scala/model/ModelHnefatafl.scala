@@ -1,91 +1,99 @@
 package model
 
-import actor_ia.{ArtificialIntelligenceImpl, FindBestMoveMsg, MoveGenerator}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import controller.ControllerHnefatafl
-import ia.{EvaluationFunction, MiniMax, MiniMaxImpl}
-import model.GameSnapshot.GameSnapshotImpl
-import utils.BoardGame.Board
-import utils.{Coordinate, Move}
+import ia.messages.Messages._
+import ia.minimax.ArtificialIntelligence
+import model.game.GameMode.GameMode
+import model.game.GameSnapshot.GameSnapshotImpl
+import model.game.GameVariant.GameVariant
+import model.game.Level.Level
+import model.game.Player.Player
+import model.game.Snapshot.Snapshot
+import model.game._
+import model.prolog.{ParserProlog, PrologSnapshot}
 
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-
+/**
+ * Represents a viking chess game.
+ */
 trait ModelHnefatafl {
 
   /**
-    * Gets dimension of board from a specified version.
+    * Returns the dimension of the board of the current variant.
     *
-    * @return dimension
+    * @return dimension of the board
     */
   def getDimension: Int
 
   /**
-   * Calls parser for a new Game.
+   * Creates a new game.
    *
-   * @return created board and player to move.
+   * @return new game snapshot
    */
-  def createGame(): (Board, Player.Val)
+  def createGame(): GameSnapshot
 
   /**
-    * Initializes IA in PVE mode. IA makes first move if is your turn.
+    * Starts a created game.
     */
-  def startGame(): Unit
+  def startGame()
 
   /**
-   * Calls parser for the possible moves from a cell.
+   * Returns the possible moves from the specified cell.
    *
    * @param cell
-   *                  coordinate of the Cell.
+   *        coordinate of the cell
    *
-   * @return list buffer of the possible computed moves.
+   * @return list of the possible coordinates where the piece in the specified coordinate can move
    */
-  def showPossibleCells(cell: Coordinate): ListBuffer[Coordinate]
+  def showPossibleCells(cell: Coordinate): Seq[Coordinate]
 
   /**
-   * Calls parser for making a move from coordinate to coordinate.
+    * Makes the best move for the IA
+    */
+  def iaBestMove(move: Move)
+
+  /**
+   * Makes a move if it is legit.
    *
    * @param move
-   *                    move to make
-   *
-   * @return updated board.
+   *        move to make
    */
-  def makeMove(move: Move): Unit
+  def makeMove(move: Move)
 
   /**
-   * Checks if the cell at the specified coordinate is the central cell.
+   * Checks if the specified coordinate is the central coordinate.
    *
    * @param coordinate
-   *                      coordinate of the cell to inspect
+   *        coordinate to inspect
    *
-   * @return boolean.
+   * @return if the specified coordinate is the central coordinate
    */
   def isCentralCell(coordinate: Coordinate): Boolean
 
   /**
-   * Checks if the cell at the specified coordinate is a corner cell.
+   * Checks if the specified coordinate is a corner coordinate.
    *
    * @param coordinate
-   *                        coordinate of the cell to inspect
+   *        coordinate of the cell to inspect
    *
-   * @return boolean.
+   * @return if the specified coordinate is a corner coordinate
    */
   def isCornerCell(coordinate: Coordinate): Boolean
 
   /**
-   * Checks if the cell at the specified coordinate is a init pawn cell.
+   * Checks if the specified coordinate is an initial pawn cell.
    *
    * @param coordinate
-   *                        coordinate of the cell to inspect
+   *         coordinate to inspect
    *
-   * @return boolean.
+   * @return if the specified coordinate is an initial pawn cell
    */
   def isPawnCell(coordinate: Coordinate): Boolean
 
   /**
-   * Find king coordinate in the current board.
+   * Finds the king in the game board.
    *
-   * @return king coordinate to list.
+   * @return king's coordinate.
    */
   def findKing(): Coordinate
 
@@ -93,233 +101,217 @@ trait ModelHnefatafl {
    * Returns a previous or later state of the current board.
    *
    * @param snapshotToShow
-   *                        indicates snapshot to show.
-   *
-   * @return required board
+   *        indicates the snapshot to show.
    */
-  def changeSnapshot(snapshotToShow: Snapshot.Value): Unit
+  def changeSnapshot(snapshotToShow: Snapshot)
 
   /**
-   * Undoes last move.
+   * Undoes the last move.
    */
-  def undoMove(): Unit
+  def undoMove()
 }
 
+/**
+ * Represents a viking chess game.
+ */
 object ModelHnefatafl {
 
-  def apply(controller: ControllerHnefatafl, newVariant: GameVariant.Val, gameMode: GameMode.Value, levelIA: Level.Val, playerChosen: Player.Value): ModelHnefatafl = ModelHnefataflImpl(controller, newVariant, gameMode, levelIA, playerChosen)
+  val MIN_IA_TIME = 750
 
-  case class ModelHnefataflImpl(controller: ControllerHnefatafl, newVariant: GameVariant.Val, gameMode: GameMode.Value, level: Level.Val, playerChosen: Player.Value) extends ModelHnefatafl {
+  def apply(gameVariant: GameVariant, gameMode: GameMode, levelIA: Level, playerChosen: Player): ModelHnefatafl =
+    ModelHnefataflImpl(gameVariant, gameMode, levelIA, playerChosen)
 
-    /**
-     * Inits the parser prolog and set the file of the prolog rules.
-     */
-    private val THEORY: String = TheoryGame.GameRules.toString
-    private val parserProlog: ParserProlog = ParserPrologImpl(THEORY)
-    private var storySnapshot: mutable.ListBuffer[GameSnapshot] = _
+  case class ModelHnefataflImpl(private val gameVariant: GameVariant, private val gameMode: GameMode, private val levelIA: Level,
+                                private val playerChosen: Player) extends ModelHnefatafl {
+
+    private val SIZE_DRAW: Int = 9
+
+    private var storySnapshot: Seq[GameSnapshot] = _
     private var currentSnapshot: Int = 0
-
-    private var refIA: ActorRef = _
-    private var sequIA: MiniMax = _
+    private var system: ActorSystem = _
+    private var refIA: Option[ActorRef] = Option.empty
+    private var iaSnapshot: GameSnapshot = _
 
     /**
-     * Defines status of the current game.
+     * @inheritdoc
      */
-    private var game: (Player.Val, Player.Val, Board, Int) = _
-
-    private final val SIZE_DRAW: Int = 9
+    override def getDimension: Int = gameVariant.boardSize
 
     /**
-      * Defines the game variant.
-      */
-    private val currentVariant: GameVariant.Val = newVariant
-
-    /**
-      * Defines the chosen mode.
-      */
-    private val mode: GameMode.Value = gameMode
-
-    /**
-      * Defines the chosen level of IA.
-      */
-    private val levelIA: Level.Val = level
-
-    override def getDimension: Int = newVariant.size
-
-    override def createGame(): (Board, Player.Val) = {
-
-      game = parserProlog.createGame(currentVariant.nameVariant.toLowerCase)
-
-      storySnapshot = mutable.ListBuffer(GameSnapshotImpl(currentVariant, game._1, game._2, game._3, Option.empty, 0, 0))
-
-      (game._3, game._1)
+     * @inheritdoc
+     */
+    override def createGame(): GameSnapshot = {
+      val game: PrologSnapshot = ParserProlog.createGame(gameVariant.toString.toLowerCase)
+      storySnapshot = Seq(GameSnapshotImpl(gameVariant, game.playerToMove, game.winner, game.board, Option.empty, 0, 0))
+      storySnapshot.last
     }
 
+    /**
+     * @inheritdoc
+     */
     override def startGame(): Unit = {
-      if(mode.equals(GameMode.PVE)) {
+      if(gameMode.equals(GameMode.PVE)) {
         initIA()
-        if (iaTurn)
-          makeMoveIA()
-      }
-    }
-
-    override def showPossibleCells(cell: Coordinate): ListBuffer[Coordinate] = {
-      if (showingCurrentSnapshot)
-        parserProlog.showPossibleCells(cell)
-      else ListBuffer.empty
-    }
-
-
-    override def makeMove(move: Move): Unit = {
-
-      //println("snapshot = MoveGenerator.makeMove(snapshot, Move(Coordinate(" + move.from.x + "," + move.from.y + "), " + "Coordinate(" + move.to.x + "," + move.to.y + ")))")
-
-      game = parserProlog.makeLegitMove(move)
-
-      val pieceCaptured: (Int, Int) = incrementCapturedPieces(game._1, game._4)
-      var winner: Player.Val = game._2
-
-      if (checkThreefoldRepetition())
-        winner = Player.Draw
-
-      storySnapshot += GameSnapshot(currentVariant, game._1, winner, game._3, Option(move), pieceCaptured._1, pieceCaptured._2)
-
-      //println(storySnapshot.last.getNumberCapturedWhites + ", " + storySnapshot.last.getNumberCapturedBlacks)
-      currentSnapshot += 1
-
-
-      if(!(refIA != null & storySnapshot.size <= 2) || mode.equals(GameMode.PVP)) {
-        controller.activeFirstPrevious()
-        controller.activeUndo()
-      }
-
-      controller.updateView(storySnapshot.last)
-
-      if(mode.equals(GameMode.PVE) && storySnapshot.last.getWinner.equals(Player.None) && iaTurn){
-        makeMoveIA()
-      }
-    }
-
-    override def isCentralCell(coordinate: Coordinate): Boolean = parserProlog.isCentralCell(coordinate)
-
-    override def isCornerCell(coordinate: Coordinate): Boolean = parserProlog.isCornerCell(coordinate)
-
-    override def isPawnCell(coordinate: Coordinate): Boolean = parserProlog.isPawnCell(coordinate)
-
-    override def findKing(): Coordinate = parserProlog.findKing()
-
-    override def changeSnapshot(previousOrNext: Snapshot.Value): Unit = {
-      previousOrNext match {
-        case Snapshot.Previous => decrementCurrentSnapshot()
-        case Snapshot.Next => incrementCurrentSnapshot()
-        case Snapshot.First => currentSnapshot = 0; controller.disableFirstPrevious(); controller.activeNextLast()
-        case Snapshot.Last => currentSnapshot = storySnapshot.size - 1; controller.disableNextLast(); controller.activeFirstPrevious()
-      }
-      val gameSnapshot = storySnapshot(currentSnapshot)
-      controller.changeSnapshotView(gameSnapshot)
-    }
-
-    override def undoMove(): Unit = {
-      if (showingCurrentSnapshot & storySnapshot.last.getLastMove.nonEmpty) {
-        storySnapshot -= storySnapshot.last
-        currentSnapshot -= 1
-        controller.activeFirstPrevious()
-        parserProlog.undoMove(storySnapshot.last.getBoard)
-        pveUndoMove()
-        controller.changeSnapshotView(storySnapshot.last)
-      }
-      if(storySnapshot.size == 1) {
-        controller.disableNextLast()
-        controller.disableFirstPrevious()
-        controller.disableUndo()
         if(iaTurn)
           makeMoveIA()
       }
     }
 
     /**
-      * Deletes an other snapshot for start from user move.
-      */
-    private def pveUndoMove(): Unit = {
-      if(mode.equals(GameMode.PVE) & storySnapshot.size > 1) {
-        storySnapshot -= storySnapshot.last
-        currentSnapshot -= 1
-        parserProlog.undoMove(storySnapshot.last.getBoard)
+     * @inheritdoc
+     */
+    override def showPossibleCells(cell: Coordinate): Seq[Coordinate] = {
+      if(!iaTurn)
+        if(showingCurrentSnapshot)
+          ParserProlog.showPossibleCells(cell)
+        else
+          Seq.empty
+      else
+        Seq.empty
+    }
+
+    /**
+     * @inheritdoc
+     */
+    override def makeMove(move: Move): Unit = {
+      val game: Option[PrologSnapshot]  = ParserProlog.makeLegitMove(move)
+
+      if(game.nonEmpty) {
+        val g = game.get
+        val pieceCaptured: CapturedPieces = incrementCapturedPieces(g.playerToMove, g.nCaptures)
+        var winner: Player = g.winner
+
+        if(checkThreefoldRepetition())
+          winner = Player.Draw
+
+        storySnapshot :+=
+          GameSnapshot(gameVariant, g.playerToMove, winner, g.board, Option(move), pieceCaptured.blackCaptured, pieceCaptured.whiteCaptured)
+
+        currentSnapshot += 1
+
+        ControllerHnefatafl.activeFirstPrevious()
+        ControllerHnefatafl.activeUndo()
+
+        ControllerHnefatafl.updateView(storySnapshot.last)
+
+        if(gameMode.equals(GameMode.PVE) && storySnapshot.last.getWinner.equals(Player.None) && iaTurn)
+          makeMoveIA()
       }
     }
 
     /**
-      * Sends a messages to IA actor for make a move.
-      */
+     * @inheritdoc
+     */
+    override def iaBestMove(move: Move): Unit = 
+      if(notUndone) 
+        makeMove(move)
+
+    /**
+     * @inheritdoc
+     */
+    override def isCentralCell(coordinate: Coordinate): Boolean = ParserProlog.isCentralCell(coordinate)
+
+    /**
+     * @inheritdoc
+     */
+    override def isCornerCell(coordinate: Coordinate): Boolean = ParserProlog.isCornerCell(coordinate)
+
+    /**
+     * @inheritdoc
+     */
+    override def isPawnCell(coordinate: Coordinate): Boolean = ParserProlog.isPawnCell(coordinate)
+
+    /**
+     * @inheritdoc
+     */
+    override def findKing(): Coordinate = ParserProlog.findKing()
+
+    /**
+     * @inheritdoc
+     */
+    override def changeSnapshot(previousOrNext: Snapshot): Unit = {
+      previousOrNext match {
+        case Snapshot.Previous => decrementCurrentSnapshot()
+        case Snapshot.Next => incrementCurrentSnapshot()
+        case Snapshot.First => currentSnapshot = 0; ControllerHnefatafl.disableFirstPrevious(); ControllerHnefatafl.activeNextLast()
+        case Snapshot.Last => currentSnapshot = storySnapshot.size - 1; ControllerHnefatafl.disableNextLast(); ControllerHnefatafl.activeFirstPrevious()
+      }
+      val gameSnapshot = storySnapshot(currentSnapshot)
+      ControllerHnefatafl.updateView(gameSnapshot)
+    }
+
+    /**
+     * @inheritdoc
+     */
+    override def undoMove(): Unit = {
+      if(showingCurrentSnapshot && storySnapshot.last.getLastMove.nonEmpty) {
+        storySnapshot = storySnapshot.filter(!_.equals(storySnapshot.last))
+        currentSnapshot -= 1
+        ControllerHnefatafl.activeFirstPrevious()
+        ParserProlog.undoMove(storySnapshot.last.getBoard)
+        ControllerHnefatafl.updateView(storySnapshot.last)
+      }
+      if(storySnapshot.size == 1) {
+        ControllerHnefatafl.disableNextLast()
+        ControllerHnefatafl.disableFirstPrevious()
+        ControllerHnefatafl.disableUndo()
+      }
+      if(gameMode.equals(GameMode.PVE))
+        if(iaTurn)
+          makeMoveIA()
+    }
+
+    private def notUndone: Boolean = iaSnapshot.equals(storySnapshot.last)
+
     private def makeMoveIA(): Unit = {
-      //SEQUENTIAL IA
+      //SEQUENTIAL PRUNING ALPHA-BETA
       //makeMove(sequIA.findBestMove(storySnapshot.last))
 
-      //PARALLEL
-      refIA ! FindBestMoveMsg(storySnapshot.last)
+      //MINIMAX ACTORS
+      iaSnapshot = storySnapshot.last
+      if(refIA.nonEmpty)
+        refIA.get ! CloseMsg()
+
+      refIA = Option(system.actorOf(Props(ArtificialIntelligence(this, levelIA))))
+      refIA.get ! FindBestMoveMsg(storySnapshot.last)
     }
 
-    /**
-     * Increments the number of pieces captured of the player.
-     */
-    private def incrementCapturedPieces(player: Player.Val, piecesCaptured: Int): (Int, Int) = player match {
-      case Player.Black => (storySnapshot.last.getNumberCapturedBlacks + piecesCaptured, storySnapshot.last.getNumberCapturedWhites)
-      case Player.White => (storySnapshot.last.getNumberCapturedBlacks, storySnapshot.last.getNumberCapturedWhites + piecesCaptured)
-      case _ => null
+    private case class CapturedPieces(blackCaptured: Int, whiteCaptured: Int)
+
+    private def incrementCapturedPieces(player: Player, piecesCaptured: Int): CapturedPieces = player match {
+      case Player.Black => CapturedPieces(storySnapshot.last.getNumberCapturedBlacks + piecesCaptured, storySnapshot.last.getNumberCapturedWhites)
+      case _ => CapturedPieces(storySnapshot.last.getNumberCapturedBlacks, storySnapshot.last.getNumberCapturedWhites + piecesCaptured)
     }
 
-    /**
-     * Checks if there was a threefold repetition.
-     *
-     * @return boolean
-     */
     private def checkThreefoldRepetition(): Boolean = storySnapshot.reverse.take(SIZE_DRAW) match {
       case l if l.isEmpty || l.size < SIZE_DRAW => false
       case l if l.head.equals(l(4)) && l(4).equals(l(8)) => true
       case _ => false
     }
 
-    /**
-      * Increments current snapshot.
-      */
     private def incrementCurrentSnapshot(): Unit = {
       if(!showingCurrentSnapshot) {
         currentSnapshot += 1
-        controller.activeFirstPrevious()
+        ControllerHnefatafl.activeFirstPrevious()
       }
-      if(showingCurrentSnapshot) controller.disableNextLast()
+      if(showingCurrentSnapshot) ControllerHnefatafl.disableNextLast()
     }
 
-    /**
-      * Decrements current snapshot.
-      */
     private def decrementCurrentSnapshot(): Unit = {
       if(currentSnapshot > 0) {
         currentSnapshot -= 1
-        controller.activeNextLast()
+        ControllerHnefatafl.activeNextLast()
       }
-      if(currentSnapshot == 0) controller.disableFirstPrevious()
+      if(currentSnapshot == 0) ControllerHnefatafl.disableFirstPrevious()
     }
 
-    /**
-      * Checks if the currentSnapshot is the last.
-      */
     private def showingCurrentSnapshot: Boolean = currentSnapshot == storySnapshot.size - 1
 
-    /**
-      * Actives the IA Actor
-      */
     private def initIA(): Unit = {
-      val system: ActorSystem = ActorSystem()
-      refIA = system.actorOf(Props(ArtificialIntelligenceImpl(this, levelIA.depth)))
-      //sequIA = MiniMaxImpl(levelIA.depth)
+      system = ActorSystem()
+      //sequIA = MiniMaxImpl(levelIA)
     }
 
-    /**
-      * Checks if IA turn.
-      *
-      * @return boolean
-      */
-    private def iaTurn: Boolean = !storySnapshot.last.getPlayerToMove.equals(playerChosen)
+    private def iaTurn: Boolean = !(storySnapshot.last.getPlayerToMove.equals(playerChosen) || playerChosen.equals(Player.None))
   }
 }

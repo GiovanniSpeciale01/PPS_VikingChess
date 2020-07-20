@@ -2,7 +2,6 @@
 %%  							   Variants			               			  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 %%% Returns the board size of the specified game variant.
 % [boardSize(+Variant, -BoardSize)]
 boardSize(hnefatafl, 11).
@@ -296,6 +295,10 @@ nextPlayerToMove(X, Y) :- opponent(X, Y).
 % [newGame(+Variant, -Game)]
 newGame(V, (V, b, n, B)) :- initBoard(V, B).
 
+%%% Returns the -PlayerToMove of the specified +Game.
+% [gamePlayerToMove(+Game, -PlayerToMove)]
+gamePlayerToMove((_,P , _, _), P ).	
+
 %%% Returns the -Board of the specified +Game.
 % [gameBoard(+Game, -Board)]
 gameBoard((_, _, _, B), B).
@@ -337,19 +340,6 @@ computeMovesForRowCells((V, P, W, B), [C|T], O) :-
 		append(M, M1, O), !.
 % Other cases: opponent Player or piece(void)
 computeMovesForRowCells(G, [H|T], O) :- computeMovesForRowCells(G, T, O).
-
-%%% Checks if there is at least one possible move available in the specified game.
-% [findAnyMove(+Game, +RowsToInspect)
-findAnyMove(G, [R|Rs]) :-
-		(findAnyMoveRow(G, R) ; findAnyMove(G, Rs)), !.
-%%% Checks if there is at least one possible move available in the specified game
-%%% in the specified row.
-% [findAnyMove(+Game, +CellsToInspect)
-findAnyMoveRow((V, P, W, B), [C|T]) :-
-		cellOwner(C, P),
-		possibleMoves((V, P, W, B), C, M),
-		((size(M, S), S > 0) ; findAnyMoveRow((V, P, W, B), T)), !.
-findAnyMoveRow(G, [_|T]) :- findAnyMoveRow(G, T).
 
 %%% Returns all possible moves of the specified coordinate in the specified Game
 %%% (NB: only for PlayerToMove pieces, see Game example above).
@@ -515,7 +505,7 @@ checkVictory(V, B, b, MoveCoord) :-
 %%% Checks if the game is drawn.
 % [checkDraw(+Game)]
 checkDraw(G) :- not(onePossibleMoveIsAvalaible(G)).
-onePossibleMoveIsAvalaible(G) :- gameBoard(G, B), findAnyMove(G, B).
+onePossibleMoveIsAvalaible(G) :- not(gamePossibleMoves(G, [])).
 
 %%% Finds the king's coordinate in the specified +Board.
 % [findKing(+Board, -KingCoordinate)]
@@ -845,11 +835,6 @@ setEmptyRow([], []).
 setEmptyRow([c(C,_)|T],[c(C,e)|T1]) :- setEmptyRow(T, T1).
 
 % yes
-testFindAnyMove :- newGame(tablut, G), gameBoard(G, B), findAnyMove(G, B).
-% yes
-testFindNoMove :- newGame(hnefatafl, G), gameBoard(G, B), setEmptyBoard(B, EB), not(findAnyMove(G, EB)).
-
-% yes
 allTestsPossibleMoves :-
 		testGamePossibleMoves,
 		testGamePossibleMoves1,
@@ -857,9 +842,8 @@ allTestsPossibleMoves :-
 		testGetCoordPossibleMovesEmptyCell,
 		testGetCoordPossibleMovesNotPlayerToMove,
 		testGetCoordPossibleMovesBlockedPiece,
-		testGetCoordPossibleMovesKingSpecialCells,
-		testFindAnyMove,
-		testFindNoMove.
+		testGetCoordPossibleMovesKingSpecialCells.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1145,4 +1129,4 @@ allTests :-
 		allTestsCaptures,
 		allTestsScenarios,
 		allTestsLegalMoves.
-		
+

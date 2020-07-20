@@ -2,16 +2,22 @@ package view
 
 import controller.ControllerHnefatafl
 import javax.swing.{JFrame, JPanel}
-import model.{GameMode, GameSnapshot, Player, Snapshot}
-import utils.BoardGame.Board
-import utils.{Coordinate, Move}
+import model.game.Snapshot.Snapshot
+import view.utils.JPanelAddAll._
+import model.game.{Coordinate, GameSnapshot, Move}
+import view.factories.{GameFactory, MenuFactory}
+import view.game.ViewGame
+import view.menu.ViewMenu
 
+/**
+ * Represents the hnefatafl game main viewer which shows the right overlay and
+ * communicates with the controller on behalf of the other components of the view.
+ */
 trait ViewHnefatafl {
-
   /**
-    * Calls controller to get the dimension according to game variant.
+    * Calls the controller to get the board dimension according to game variant.
     *
-    * @return dimension
+    * @return board dimension
     */
   def getDimension: Int
 
@@ -19,296 +25,296 @@ trait ViewHnefatafl {
     * Switches panel in overlay.
     *
     * @param actualPanel
-    *                 panel shown.
+    *         panel shown.
     * @param panelToShow
-    *                 panel to show.
+    *         panel to show.
     */
   def switchOverlay(actualPanel: JPanel, panelToShow: JPanel)
 
   /**
-    * Gets the game menù.
+    * Returns the in game menu.
     *
-    * @return game menù panel.
+    * @return in game menu.
     */
   def getInGameMenuPanel: JPanel
 
   /**
-    * Gets the game panel.
+    * Returns the game panel.
     *
     * @return game panel.
     */
   def getGamePanel: JPanel
 
   /**
-    * Gets the menù.
+    * Returns the main menu panel.
     *
-    * @return menù panel.
+    * @return main menu panel.
     */
-  def getMenuUtils: Menu
+  def getMainMenu: ViewMenu
 
   /**
-    * Initializes or restores the game.
+    * Resets the game.
     */
-  def initOrRestoreGUI(playerChosen: Player.Value)
+  def resetGUI()
 
   /**
-    * Makes move.
+    * Calls the controller to make a move.
     *
     * @param move
-   *             move to make
+    *         move to make
     */
   def makeMove(move: Move)
 
   /**
-    * Gets the possible moves from a specifies coordiante.
+    * Calls the controller for getting the possible moves from a specified coordinate.
     *
     * @param coordinate
-    *              starting coordinate.
+    *          starting coordinate.
     * @return sequence of possible coordinates.
     */
   def getPossibleMoves(coordinate: Coordinate): Seq[Coordinate]
 
   /**
-    * Sets the move made by the user.
+    * Updates the board in view.
     *
     * @param gameSnapshot
-    *                 snapshot to show.
+    *         snapshot to show.
     */
   def update(gameSnapshot: GameSnapshot)
 
   /**
-    * Notifies the viewer a change snapshot to view.
-    *
-    * @param gameSnapshot
-    *                 snapshot to show.
-    */
-  def changeSnapshot(gameSnapshot: GameSnapshot): Unit
-
-  /**
-   * Checks if the cell at the specified coordinate is the central cell.
+   * Calls the controller to check if the cell at the specified coordinate is the central cell.
    *
    * @param coordinate
-   *                   coordinate of the cell to inspect
+   *          coordinate of the cell to inspect
    *
-   * @return boolean.
+   * @return if the cell at the specified coordinate is the central cell.
    */
   def isCentralCell(coordinate: Coordinate): Boolean
 
   /**
-   * Checks if the cell at the specified coordinate is a corner cell.
+   * Calls the controller to check if the cell at the specified coordinate is a corner cell.
    *
    * @param coordinate
-   *                   coordinate of the cell to inspect
+   *         coordinate of the cell to inspect
    *
-   * @return boolean.
+   * @return if the cell at the specified coordinate is a corner cell.
    */
   def isCornerCell(coordinate: Coordinate): Boolean
 
   /**
-    * Checks if the cell at the specified coordinate is a init pawn cell.
+    * Calls the controller to check if the cell at the specified coordinate is a initial pawn cell.
     *
     * @param coordinate
-    *                   coordinate of the cell to inspect
+    *         coordinate of the cell to inspect
     *
-    * @return boolean.
+    * @return if the cell at the specified coordinate is a initial pawn cell.
     */
   def isPawnCell(coordinate: Coordinate): Boolean
 
   /**
-    * Find king coordinate in the current board.
+    * Calls the controller to get the king coordinate in the current board.
     *
-    * @return king coordinate to list.
+    * @return king coordinate.
     */
   def findKing(): Coordinate
 
   /**
-    * Returns a previous or later state of the current board.
+    * Calls the controller to switch to a previous or later state of the game.
     *
     * @param snapshotToShow
-    *                   indicates snapshot to show.
+    *         indicates snapshot to show.
     */
-  def changeSnapshot(snapshotToShow: Snapshot.Value): Unit
+  def changeSnapshot(snapshotToShow: Snapshot)
 
   /**
-   * Undoes last move.
+   * Calls the controller to undo the last move.
    */
-  def undoMove(): Unit
+  def undoMove()
 
   /**
-    * Actives/Disables next and last move.
+    * Enables next and last move buttons.
     */
   def activeNextLast()
+
+  /**
+   * Disables next and last move buttons.
+   */
   def disableNextLast()
 
   /**
-    * Actives/Disables previous and first move.
+    * Enables previous and first move buttons.
     */
   def activeFirstPrevious()
+
+  /**
+   * Disables previous and first move buttons.
+   */
   def disableFirstPrevious()
 
   /**
-    * Actives/Disables undo move.
+    * Enables undo move button.
     */
   def activeUndo()
+
+  /**
+   * Disables undo move button.
+   */
   def disableUndo()
-
-  /**
-    * Gets player chosen from user.
-    */
-  def getPlayerChosen: Player.Value
-
-  /**
-    * Gets game mode chosen from user.
-    */
-  def getGameMode: GameMode.Value
 }
 
+/**
+ * Represents the hnefatafl game main viewer which shows the right overlay and
+ * communicates with the controller on behalf of the other components of the view.
+ */
 object ViewHnefatafl {
 
-  def apply(controller: ControllerHnefatafl): ViewHnefatafl = ViewHnefataflImpl(controller)
+  def apply(): ViewHnefatafl = ViewHnefataflImpl()
 
-  case class ViewHnefataflImpl(controller: ControllerHnefatafl) extends ViewHnefatafl {
+  case class ViewHnefataflImpl() extends ViewHnefatafl {
 
-    private var menuPanel, variantsPanel, diffPanel, inGameMenuPanel, playerChoicePanel: JPanel = _
+    private var menuPanel, variantsPanel, difficultyPanel, inGameMenuPanel, playerChoicePanel: JPanel = _
     private var dimension: Int = _
-    private val viewMainMenu: Menu = Menu(this)
-    private val viewMatch: ViewMatch = ViewMatch(this)
-    private val frame: JFrame = GameFactory.createFrame
+    private val viewMainMenu: ViewMenu = ViewMenu(this)
+    private val viewGame: ViewGame = ViewGame(this)
+    private val frame: JFrame = MenuFactory.createFrame
     private val overlayPanel: JPanel = GameFactory.createOverlayLayoutPanel
     private var gamePanel: JPanel = GameFactory.createGamePanel
 
-    initMainMenu()
-    overlayPanel.add(menuPanel)
-    initVariantsMenu()
-    overlayPanel.add(variantsPanel)
-    initDiffMenu()
-    overlayPanel.add(diffPanel)
-    initPlayerChoiceMenu()
-    overlayPanel.add(playerChoicePanel)
-    initInGameMenu()
-    overlayPanel.add(inGameMenuPanel)
+    menuPanel = viewMainMenu.initMenu
+    variantsPanel = viewMainMenu.initVariantsMenu
+    difficultyPanel = viewMainMenu.initDiffMenu
+    playerChoicePanel = viewMainMenu.initPlayerChoiceMenu
+    inGameMenuPanel = viewMainMenu.initInGameMenu
+
+    overlayPanel.addAll(menuPanel)(variantsPanel)(difficultyPanel)(playerChoicePanel)(inGameMenuPanel)
 
     frame.add(overlayPanel)
     frame.setVisible(true)
 
-    override def getDimension: Int = controller.getDimension
+    /**
+     * @inheritdoc
+     */
+    override def getDimension: Int = ControllerHnefatafl.getDimension
 
+    /**
+     * @inheritdoc
+     */
     override def switchOverlay(actualPanel: JPanel, panelToShow: JPanel): Unit = {
       actualPanel.setVisible(false)
       panelToShow.setVisible(true)
     }
 
+    /**
+     * @inheritdoc
+     */
     override def getInGameMenuPanel: JPanel = inGameMenuPanel
 
+    /**
+     * @inheritdoc
+     */
     override def getGamePanel: JPanel = gamePanel
 
-    override def getMenuUtils: Menu = viewMainMenu
+    /**
+     * @inheritdoc
+     */
+    override def getMainMenu: ViewMenu = viewMainMenu
 
-    override def initOrRestoreGUI(playerChosen: Player.Value): Unit = {
+    /**
+     * @inheritdoc
+     */
+    override def resetGUI(): Unit = {
       if (gamePanel.getComponents.length > 0) {
-        viewMatch.restoreGame()
+        viewGame.restoreGame()
         overlayPanel.remove(gamePanel)
       }
-      val newGame: (Board, Player.Value) = controller.newGame(viewMainMenu.getBoardVariant,viewMainMenu.getGameMode, viewMainMenu.getDifficult, viewMainMenu.getPlayer)
-      dimension = newGame._1.size
-      initGamePanel(newGame._1)
+      val newGame: GameSnapshot = ControllerHnefatafl.newGame(viewMainMenu.getBoardVariant, viewMainMenu.getGameMode, viewMainMenu.getDifficulty, viewMainMenu.getPlayer)
+      dimension = newGame.getBoard.size
+      gamePanel = viewGame.initGamePanel()
       overlayPanel.add(gamePanel)
+      viewGame.update(newGame)
       showGame()
-      viewMatch.getLabelPlayer.setText(newGame._2 + " moves.")
-
-      controller.startGame()
-    }
-
-    override def makeMove(move: Move): Unit = {
-      controller.makeMove(move)
-    }
-
-    override def getPossibleMoves(coordinate: Coordinate): Seq[Coordinate] = {
-      controller.getPossibleMoves(coordinate)
-    }
-
-    override def update(gameSnapshot: GameSnapshot): Unit = viewMatch.update(gameSnapshot)
-
-    override def changeSnapshot(gameSnapshot: GameSnapshot): Unit = viewMatch.updateSnapshot(gameSnapshot)
-
-    override def isCentralCell(coordinate: Coordinate): Boolean = controller.isCentralCell(coordinate)
-
-    override def isCornerCell(coordinate: Coordinate): Boolean = controller.isCornerCell(coordinate)
-
-    override def isPawnCell(coordinate: Coordinate): Boolean = controller.isPawnCell(coordinate)
-
-    override def findKing(): Coordinate = controller.findKing()
-
-    override def changeSnapshot(snapshotToShow: Snapshot.Value): Unit = controller.changeSnapshot(snapshotToShow)
-
-    override def undoMove(): Unit = controller.undoMove()
-
-    override def disableNextLast(): Unit = viewMatch.disableNextLast()
-
-    override def disableFirstPrevious(): Unit = viewMatch.disableFirstPrevious()
-
-    override def activeUndo(): Unit = viewMatch.activeUndo()
-
-    override def disableUndo(): Unit = viewMatch.disableUndo()
-
-    override def activeNextLast(): Unit = viewMatch.activeNextLast()
-
-    override def activeFirstPrevious(): Unit = viewMatch.activeFirstPrevious()
-
-    override def getPlayerChosen: Player.Value = viewMainMenu.getPlayer
-
-    override def getGameMode: GameMode.Value = viewMainMenu.getGameMode
-
-    /**
-      * Initializes the main menù.
-      */
-    private def initMainMenu(): Unit = {
-      menuPanel = viewMainMenu.initMenu
+      ControllerHnefatafl.startGame()
     }
 
     /**
-      * Initializes the variant menù.
-      */
-    private def initVariantsMenu(): Unit = {
-      variantsPanel = viewMainMenu.initVariantsMenu
-    }
+     * @inheritdoc
+     */
+    override def makeMove(move: Move): Unit = ControllerHnefatafl.makeMove(move)
 
     /**
-      * Initializes the difficult selection menù.
-      */
-    private def initDiffMenu(): Unit = {
-      diffPanel = viewMainMenu.initDiffMenu
-    }
+     * @inheritdoc
+     */
+    override def getPossibleMoves(coordinate: Coordinate): Seq[Coordinate] = ControllerHnefatafl.getPossibleMoves(coordinate)
 
     /**
-      * Initializes the player selection menù.
-      */
-    private def initPlayerChoiceMenu(): Unit = {
-      playerChoicePanel = viewMainMenu.initPlayerChoiceMenu
-    }
+     * @inheritdoc
+     */
+    override def update(gameSnapshot: GameSnapshot): Unit = viewGame.update(gameSnapshot)
 
     /**
-      * Initializes the game menù.
-      */
-    private def initInGameMenu(): Unit = {
-      inGameMenuPanel = viewMainMenu.initInGameMenu
-    }
+     * @inheritdoc
+     */
+    override def isCentralCell(coordinate: Coordinate): Boolean = ControllerHnefatafl.isCentralCell(coordinate)
 
     /**
-      * Initializes the game panel.
-      *
-      * @param board
-      *               board returned from parser.
-      */
-    private def initGamePanel(board: Board): Unit = {
-      gamePanel = viewMatch.initGamePanel(board)
-    }
+     * @inheritdoc
+     */
+    override def isCornerCell(coordinate: Coordinate): Boolean = ControllerHnefatafl.isCornerCell(coordinate)
 
     /**
-      * Show the game panel.
-      */
+     * @inheritdoc
+     */
+    override def isPawnCell(coordinate: Coordinate): Boolean = ControllerHnefatafl.isPawnCell(coordinate)
+
+    /**
+     * @inheritdoc
+     */
+    override def findKing(): Coordinate = ControllerHnefatafl.findKing()
+
+    /**
+     * @inheritdoc
+     */
+    override def changeSnapshot(snapshotToShow: Snapshot): Unit = ControllerHnefatafl.changeSnapshot(snapshotToShow)
+
+    /**
+     * @inheritdoc
+     */
+    override def undoMove(): Unit = ControllerHnefatafl.undoMove()
+
+    /**
+     * @inheritdoc
+     */
+    override def disableNextLast(): Unit = viewGame.disableNextLast()
+
+    /**
+     * @inheritdoc
+     */
+    override def disableFirstPrevious(): Unit = viewGame.disableFirstPrevious()
+
+    /**
+     * @inheritdoc
+     */
+    override def activeUndo(): Unit = viewGame.activeUndo()
+
+    /**
+     * @inheritdoc
+     */
+    override def disableUndo(): Unit = viewGame.disableUndo()
+
+    /**
+     * @inheritdoc
+     */
+    override def activeNextLast(): Unit = viewGame.activeNextLast()
+
+    /**
+     * @inheritdoc
+     */
+    override def activeFirstPrevious(): Unit = viewGame.activeFirstPrevious()
+
     private def showGame(): Unit = {
       playerChoicePanel.setVisible(false)
+      variantsPanel.setVisible(false)
       gamePanel.setVisible(true)
     }
   }

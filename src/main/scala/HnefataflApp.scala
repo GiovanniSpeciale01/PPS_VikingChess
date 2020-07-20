@@ -1,6 +1,9 @@
-import controller.ControllerHnefatafl.ControllerHnefataflImpl
+import controller.ControllerHnefatafl
 
+/**
+ * Viking Chess game launcher
+ */
 object HnefataflApp extends App {
-  new ControllerHnefataflImpl
+  ControllerHnefatafl.start()
 }
 
